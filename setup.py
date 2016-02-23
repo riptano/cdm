@@ -16,7 +16,7 @@ setup(
             ]
         },
         install_requires=[
-            "cassandra-driver"
+            "cassandra-driver", "docopt>=0.6.1"
         ]
 
 )
