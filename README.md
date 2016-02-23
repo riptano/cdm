@@ -16,3 +16,9 @@ cdm install [dataset]
 ## Contributing
 
 See the contributing doc. 
+
+
+## Repository Layout Specification
+
+
+## Generating a new dataset
