@@ -15,9 +15,11 @@ import sys
 sys.path.append("")
 import os
 import os.path
-from docopt import docopt
 import urllib2
 import yaml
+from git import Repo
+
+from docopt import docopt
 
 
 DEBUG = False
@@ -43,8 +45,7 @@ def main():
 
 def list_datasets(search):
     print "Available datasets:"
-    with open(CDM_PACKAGE_FILE, 'r') as fp:
-        data = yaml.load(fp)
+    data = open_datasets()
 
     #TODO rank results
     found = 0
@@ -54,9 +55,15 @@ def list_datasets(search):
 
         found += 1
         print "{:20} {}".format(name, details['description'])
-        
+
     if found == 0:
         print "No datasets found"
+
+
+def open_datasets():
+    with open(CDM_PACKAGE_FILE, 'r') as fp:
+        data = yaml.load(fp)
+    return data
 
 
 def update_datasets():
@@ -68,6 +75,9 @@ def update_datasets():
     with open(CDM_PACKAGE_FILE, 'w') as d:
         d.write(data)
 
+
+def download_dataset(dataset):
+    cloned_repo = repo.clone(join(rw_dir, 'to/this/path'))
 
 
 
