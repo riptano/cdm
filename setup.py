@@ -2,10 +2,10 @@ from distutils.core import setup
 from setuptools import find_packages
 
 setup(
-        name='Cassandra Data Manager',
+        name='Cassandra Dataset Manager',
         version='0.1',
         packages=['cdm'],
-        url='https://github.com/cassandra-data-manager/cdm',
+        url='https://github.com/cassandra-dataset-manager/cdm',
         license='License :: OSI Approved :: BSD License',
         author='Jon Haddad',
         author_email='jon@jonhaddad.com',
