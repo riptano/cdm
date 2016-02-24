@@ -16,6 +16,9 @@ sys.path.append("")
 import os
 import os.path
 import urllib2
+import subprocess
+
+# 3rd party
 import yaml
 from git import Repo
 
@@ -89,7 +92,7 @@ def update_datasets():
         d.write(data)
 
 def install(dataset, version="master"):
-    print "Installing dataset=={}".format(version)
+    print "Installing dataset {}=={}".format(dataset, version)
     y = open_datasets()
 
     # returns the git repo
@@ -107,8 +110,13 @@ def install(dataset, version="master"):
         session.execute(cql)
 
     # load the schema
-    with open(local_dataset_path(dataset) + "/schema.cql", "r") as schema:
-        print schema
+    schema = local_dataset_path(dataset) + "/schema.cql"
+
+    # i'm so sorry for the following code...
+    print "Applying schema {}".format(schema)
+    command = "cqlsh -k {} -f {} ".format(dataset, schema)
+    print command
+    subprocess.call(command, shell=True)
 
 
 
