@@ -117,6 +117,8 @@ def install(dataset, version="master"):
     command = "cqlsh -k {} -f {} ".format(dataset, schema)
     print command
     subprocess.call(command, shell=True)
+    # check for CQL file loading options?
+    # check for python loading options
 
 
 
