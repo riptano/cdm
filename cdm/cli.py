@@ -46,7 +46,8 @@ def list_datasets(search):
     with open(CDM_PACKAGE_FILE, 'r') as fp:
         data = yaml.load(fp)
 
-    print data
+    for name, details in data.iteritems():
+        print "{:20} {}".format(name, details['description'])
 
 
 def update_datasets():
