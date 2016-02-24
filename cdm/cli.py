@@ -40,6 +40,7 @@ def main():
 
     if arguments["search"] or arguments["list"]: return list_datasets(arguments["<term>"])
     if arguments["update"]: return update_datasets()
+    if arguments["install"]: return install(arguments["<dataset>"])
 
     print "Done"
 
@@ -75,9 +76,24 @@ def update_datasets():
     with open(CDM_PACKAGE_FILE, 'w') as d:
         d.write(data)
 
+def install(dataset):
+    print "Installing dataset"
+    y = open_datasets()
+    download_dataset(dataset, y[dataset]['url'])
 
-def download_dataset(dataset):
-    cloned_repo = repo.clone(join(rw_dir, 'to/this/path'))
+
+def download_dataset(dataset_name, dataset_url):
+    local_git = CDM_CACHE + dataset_name
+    if not os.path.exists(local_git):
+        repo = Repo.clone_from(dataset_url, local_git)
+        print "Downloaded"
+    else:
+        print "Repo exists, pulling latest"
+        repo = Repo(local_git)
+        repo.remotes[0].pull()
+
+
+    print repo
 
 
 
