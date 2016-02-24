@@ -3,12 +3,8 @@
 Usage:
     cdm list
     cdm versions <dataset>
-    cdm install [--host=<host>] [--keyspace=<keyspace>] <dataset>
+    cdm install [--host=<host>] [--keyspace=<keyspace>] [--dry-run] <dataset>
     cdm update
-
-Options:
-    --debug     Print debugging information
-    --dry-run   Dry run, don't really install anything
 
 Examples:
     cdm install medialens
