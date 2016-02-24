@@ -22,6 +22,7 @@ from git import Repo
 from docopt import docopt
 from cassandra.cluster import Cluster
 
+
 DEBUG = False
 DATASETS_URL = "https://raw.githubusercontent.com/cassandra-data-manager/cdm/master/datasets.yaml"
 
@@ -98,7 +99,17 @@ def install(dataset, version="master"):
     repo.git.checkout(version)
 
     print "Connecting"
-    cluster = connect()
+    session = connect()
+
+    print "Creating keyspace"
+    if dataset not in session.cluster.metadata.keyspaces:
+        cql = "create KEYSPACE {} WITH replication = {{'class': 'SimpleStrategy', 'replication_factor': 1}}".format(dataset)
+        session.execute(cql)
+
+    # load the schema
+    with open(local_dataset_path(dataset) + "/schema.cql", "r") as schema:
+        print schema
+
 
 
 def local_dataset_path(dataset_name):
@@ -126,6 +137,10 @@ def download_dataset(dataset_name, dataset_url):
 def connect(host="localhost", port=9042, keyspace=None):
     return Cluster([host]).connect()
 
+def create_keyspace():
+    # TODO ask for strategy and RF
+    print "Creating keyspace (SimpleStrategy)"
+    print "Replication factor 1"
 
 
 if __name__ == "__main__":
