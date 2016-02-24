@@ -82,8 +82,12 @@ def install(dataset):
     download_dataset(dataset, y[dataset]['url'])
 
 
+def local_dataset_path(dataset_name):
+    return CDM_CACHE + dataset_name
+
+
 def download_dataset(dataset_name, dataset_url):
-    local_git = CDM_CACHE + dataset_name
+    local_git = local_dataset_path(dataset_name)
     if not os.path.exists(local_git):
         repo = Repo.clone_from(dataset_url, local_git)
         print "Downloaded"
@@ -91,10 +95,6 @@ def download_dataset(dataset_name, dataset_url):
         print "Repo exists, pulling latest"
         repo = Repo(local_git)
         repo.remotes[0].pull()
-
-
-    print repo
-
 
 
 if __name__ == "__main__":
