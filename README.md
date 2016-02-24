@@ -12,13 +12,22 @@ This repository contains the cdm tool only.  Other repositories in this repo con
 
 cdm install [dataset]
 
+## Requesting a dataset
 
-## Contributing
+Please submit a GitHub issue requesting the dataset, with as much detail as possible.  You should include the following:
 
-See the contributing doc. 
+* Dataset URL
+* What you'd like to use the data for
 
 
 ## Repository Layout Specification
+
+## Contributing
+
+See the contributing doc.   
+
+
+
 
 
 ## Generating a new dataset

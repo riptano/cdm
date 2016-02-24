@@ -30,6 +30,7 @@ CDM_PACKAGE_FILE = CDM_CACHE + "datasets.yaml"
 
 def main():
     arguments = docopt(__doc__)
+    print arguments
     # print arguments
 
     try:
@@ -38,9 +39,19 @@ def main():
         pass
 
 
-    if arguments["search"] or arguments["list"]: return list_datasets(arguments["<term>"])
-    if arguments["update"]: return update_datasets()
-    if arguments["install"]: return install(arguments["<dataset>"])
+    if arguments["search"] or arguments["list"]:
+        return list_datasets(arguments["<term>"])
+
+    if arguments["update"]:
+        return update_datasets()
+
+    if arguments["install"]:
+        tmp = arguments["<dataset>"].split("==")
+        if len(tmp) == 1: tmp.append("master")
+        return install(tmp[0], tmp[1])
+
+    if arguments["show"]:
+        return show_dataset_details(arguments["<dataset>"])
 
     print "Done"
 
@@ -76,15 +87,23 @@ def update_datasets():
     with open(CDM_PACKAGE_FILE, 'w') as d:
         d.write(data)
 
-def install(dataset):
-    print "Installing dataset"
+def install(dataset, version="master"):
+    print "Installing dataset=={}".format(version)
     y = open_datasets()
-    download_dataset(dataset, y[dataset]['url'])
+
+    # returns the git repo
+    repo = download_dataset(dataset, y[dataset]['url'])
+    # we should be on master now
+    # do I need a specific version?
+    repo.git.checkout(version)
 
 
 def local_dataset_path(dataset_name):
     return CDM_CACHE + dataset_name
 
+
+def show_dataset_details(dataset_name):
+    print "{}".format(dataset_name)
 
 def download_dataset(dataset_name, dataset_url):
     local_git = local_dataset_path(dataset_name)
@@ -94,7 +113,10 @@ def download_dataset(dataset_name, dataset_url):
     else:
         print "Repo exists, pulling latest"
         repo = Repo(local_git)
+        git = repo.git
+        git.checkout("master")
         repo.remotes[0].pull()
+    return repo
 
 
 if __name__ == "__main__":
