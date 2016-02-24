@@ -17,13 +17,14 @@ import os
 import os.path
 from docopt import docopt
 import urllib2
+import yaml
 
 
 DEBUG = False
 DATASETS_URL = "https://raw.githubusercontent.com/cassandra-data-manager/cdm/master/datasets.yaml"
 
 CDM_CACHE = os.getenv("CDM_CACHE", os.path.expanduser("~/.cdm/"))
-
+CDM_PACKAGE_FILE = CDM_CACHE + "datasets.yaml"
 
 def main():
     arguments = docopt(__doc__)
@@ -42,6 +43,11 @@ def main():
 
 def list_datasets(search):
     print "Available datasets:"
+    with open(CDM_PACKAGE_FILE, 'r') as fp:
+        data = yaml.load(fp)
+
+    print data
+
 
 def update_datasets():
     print "Updating datasets"
@@ -49,7 +55,7 @@ def update_datasets():
     data = fp.read()
     print data
 
-    with open(CDM_CACHE + "datasets.yaml", 'w') as d:
+    with open(CDM_PACKAGE_FILE, 'w') as d:
         d.write(data)
 
 
