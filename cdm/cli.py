@@ -20,7 +20,7 @@ import yaml
 from git import Repo
 
 from docopt import docopt
-
+from cassandra.cluster import Cluster
 
 DEBUG = False
 DATASETS_URL = "https://raw.githubusercontent.com/cassandra-data-manager/cdm/master/datasets.yaml"
@@ -97,6 +97,9 @@ def install(dataset, version="master"):
     # do I need a specific version?
     repo.git.checkout(version)
 
+    print "Connecting"
+    cluster = connect()
+
 
 def local_dataset_path(dataset_name):
     return CDM_CACHE + dataset_name
@@ -117,6 +120,12 @@ def download_dataset(dataset_name, dataset_url):
         git.checkout("master")
         repo.remotes[0].pull()
     return repo
+
+
+# returns a new Cluster
+def connect(host="localhost", port=9042, keyspace=None):
+    return Cluster([host]).connect()
+
 
 
 if __name__ == "__main__":
