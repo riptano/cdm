@@ -2,6 +2,7 @@
 
 Usage:
     cdm search [<term>]
+    cdm list [<term>]
     cdm show <dataset>
     cdm install [--host=<host>] [--keyspace=<keyspace>] [--dry-run] <dataset>
     cdm update
@@ -31,7 +32,7 @@ def main():
         pass
 
 
-    if arguments["search"]: return list_datasets(arguments["<term>"])
+    if arguments["search"] or arguments["list"]: return list_datasets(arguments["<term>"])
     if arguments["update"]: return update_datasets()
 
     print "Done"
