@@ -30,7 +30,7 @@ CDM_PACKAGE_FILE = CDM_CACHE + "datasets.yaml"
 
 def main():
     arguments = docopt(__doc__)
-    print arguments
+    # print arguments
 
     try:
         os.mkdir(CDM_CACHE)
