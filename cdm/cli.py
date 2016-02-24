@@ -46,8 +46,17 @@ def list_datasets(search):
     with open(CDM_PACKAGE_FILE, 'r') as fp:
         data = yaml.load(fp)
 
+    #TODO rank results
+    found = 0
     for name, details in data.iteritems():
+        if search and search not in name and search not in details['description']:
+            continue
+
+        found += 1
         print "{:20} {}".format(name, details['description'])
+        
+    if found == 0:
+        print "No datasets found"
 
 
 def update_datasets():
