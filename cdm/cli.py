@@ -20,9 +20,10 @@ import urllib2
 
 
 DEBUG = False
-DATASETS_URL = "https://github.com/cassandra-data-manager/cdm/blob/master/datasets.yaml"
+DATASETS_URL = "https://raw.githubusercontent.com/cassandra-data-manager/cdm/master/datasets.yaml"
 
 CDM_CACHE = os.getenv("CDM_CACHE", os.path.expanduser("~/.cdm/"))
+
 
 def main():
     arguments = docopt(__doc__)
@@ -44,11 +45,13 @@ def list_datasets(search):
 
 def update_datasets():
     print "Updating datasets"
-    print DATASETS_URL
-    return
     fp = urllib2.urlopen(DATASETS_URL)
     data = fp.read()
     print data
+
+    with open(CDM_CACHE + "datasets.yaml", 'w') as d:
+        d.write(data)
+
 
 
 
