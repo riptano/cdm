@@ -79,8 +79,10 @@ def install(dataset, version="master"):
     # check for CQL file loading options?
     # check for python loading options
     post_install_script = local_dataset_path(dataset) + "/post_install.py"
+    cache_dir = CDM_CACHE + dataset + "_cache"
+    os.mkdir(cache_dir)
 
-    context = Context(session=session)
+    context = Context(dataset=dataset, session=session)
     # run the post_install.py:main() if it exists
     if os.path.exists(post_install_script): # gross
         print "Running post install script"

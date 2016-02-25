@@ -14,7 +14,7 @@ def context():
         q = "create KEYSPACE {} WITH replication = {{'class': 'SimpleStrategy', 'replication_factor': 1}}".format(ks)
         session.execute(q)
     session.set_keyspace(ks)
-    
+
     return Context(session=session)
 
 
