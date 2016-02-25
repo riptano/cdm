@@ -79,7 +79,10 @@ def install(dataset, version="master"):
     cache_dir = CDM_CACHE + dataset + "_cache"
     os.mkdir(cache_dir)
 
-    context = Context(dataset=dataset, session=session)
+    context = Context(dataset=dataset,
+                      session=session,
+                      cache_dir=cache_dir)
+    
     # run the post_install.py:main() if it exists
     if os.path.exists(post_install_script): # gross
         print "Running post install script"
