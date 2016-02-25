@@ -1,9 +1,6 @@
 import os
 import os.path
-import urllib2
-import subprocess
-# 3rd party
-import yaml
+
 
 from git import Repo
 from importlib import import_module
