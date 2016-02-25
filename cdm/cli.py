@@ -48,7 +48,9 @@ def main():
     if arguments["install"]:
         tmp = arguments["<dataset>"].split("==")
         if len(tmp) == 1: tmp.append("master")
-        return install(tmp[0], tmp[1], install_graph=arguments['--graph'])
+        return install(tmp[0], tmp[1],
+                       install_graph=arguments['--graph'],
+                       install_search=arguments['--search'])
 
 
     if arguments["show"]:

@@ -1,7 +1,6 @@
 import os
 import os.path
 
-
 from git import Repo
 from importlib import import_module
 from docopt import docopt
@@ -78,7 +77,8 @@ def install(dataset, version="master", install_graph=False, install_search=False
     # check for CQL file loading options?
     # check for python loading options
     cache_dir = CDM_CACHE + dataset + "_cache"
-    os.mkdir(cache_dir)
+    if not os.path.exists(cache_dir):
+        os.mkdir(cache_dir)
 
     context = Context(dataset=dataset,
                       session=session,
@@ -100,6 +100,8 @@ def install(dataset, version="master", install_graph=False, install_search=False
             post_install = imp.load_source("post_install_search.main", post_install_script)
             post_install.main(context)
             print "Post install done."
+        else:
+            print "Search requested but not found"
 
     if install_graph:
         post_install_script = local_dataset_path(dataset) + "/post_install_graph.py"
@@ -109,6 +111,8 @@ def install(dataset, version="master", install_graph=False, install_search=False
             post_install = imp.load_source("post_install_graph.main", post_install_script)
             post_install.main(context)
             print "Post install done."
+        else:
+            print "Graph requested but not found"
 
 
 def local_dataset_path(dataset_name):
