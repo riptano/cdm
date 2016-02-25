@@ -1,4 +1,6 @@
 import urllib2
+from base64 import b64encode
+import os.path
 
 class Context(object):
     session = None
@@ -15,15 +17,27 @@ class Context(object):
         self.cache_dir = cache_dir
 
 
-    def download(self, url, cache=True):
+    def download(self, url):
         """
         returns a file pointer
+        auto caches download
 
         :param url:
         :param cache:
         :return:
         """
-        cache = self.cache_dir + ""
+        encoded = b64encode(url)
+        cache = self.cache_dir + encoded
+
+        if not os.path.exists(cache):
+            with open(cache, 'w') as fp:
+                data = urllib2.urlopen(url)
+                fp.write(data.read())
+
+        fp = open(cache, 'r')
+        return fp
+
+
 
 
 
