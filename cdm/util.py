@@ -5,6 +5,8 @@ import os.path
 from git import Repo
 from importlib import import_module
 from docopt import docopt
+import subprocess
+import yaml
 from cassandra.cluster import Cluster
 from cdm.util import *
 from cdm.context import Context
@@ -46,7 +48,7 @@ def update_datasets():
     with open(CDM_PACKAGE_FILE, 'w') as d:
         d.write(data)
 
-def install(dataset, version="master"):
+def install(dataset, version="master", install_graph=False, install_search=False):
     print "Installing dataset {}=={}".format(dataset, version)
     y = open_datasets()
 
@@ -75,20 +77,38 @@ def install(dataset, version="master"):
     subprocess.call(command, shell=True)
     # check for CQL file loading options?
     # check for python loading options
-    post_install_script = local_dataset_path(dataset) + "/post_install.py"
     cache_dir = CDM_CACHE + dataset + "_cache"
     os.mkdir(cache_dir)
 
     context = Context(dataset=dataset,
                       session=session,
                       cache_dir=cache_dir)
-    
+
+    post_install_script = local_dataset_path(dataset) + "/post_install.py"
     # run the post_install.py:main() if it exists
     if os.path.exists(post_install_script): # gross
         print "Running post install script"
         post_install = imp.load_source("post_install.main", post_install_script)
         post_install.main(context)
         print "Post install done."
+
+    if install_search:
+        post_install_script = local_dataset_path(dataset) + "/post_install_search.py"
+        # run the post_install.py:main() if it exists
+        if os.path.exists(post_install_script): # gross
+            print "Running post install search script"
+            post_install = imp.load_source("post_install_search.main", post_install_script)
+            post_install.main(context)
+            print "Post install done."
+
+    if install_graph:
+        post_install_script = local_dataset_path(dataset) + "/post_install_graph.py"
+        # run the post_install.py:main() if it exists
+        if os.path.exists(post_install_script): # gross
+            print "Running post install script"
+            post_install = imp.load_source("post_install_graph.main", post_install_script)
+            post_install.main(context)
+            print "Post install done."
 
 
 def local_dataset_path(dataset_name):

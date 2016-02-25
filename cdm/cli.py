@@ -4,11 +4,11 @@ Usage:
     cdm search [<term>]
     cdm list [<term>]
     cdm show <dataset>
-    cdm install [--host=<host>] [--keyspace=<keyspace>] [--dry-run] <dataset>
+    cdm install [--host=<host>] [--keyspace=<keyspace>] [--dry-run] [--graph] [--search] <dataset>
     cdm update
 
 Examples:
-    cdm install medialens
+    cdm install demo
 """
 
 import sys
@@ -31,7 +31,7 @@ DEBUG = False
 
 def main():
     arguments = docopt(__doc__)
-    # print arguments
+    print arguments
 
     try:
         os.mkdir(CDM_CACHE)
@@ -48,7 +48,8 @@ def main():
     if arguments["install"]:
         tmp = arguments["<dataset>"].split("==")
         if len(tmp) == 1: tmp.append("master")
-        return install(tmp[0], tmp[1])
+        return install(tmp[0], tmp[1], install_graph=arguments['--graph'])
+
 
     if arguments["show"]:
         return show_dataset_details(arguments["<dataset>"])
