@@ -13,7 +13,9 @@ def context():
     if 'test_cdm' not in cluster.metadata.keyspaces:
         q = "create KEYSPACE {} WITH replication = {{'class': 'SimpleStrategy', 'replication_factor': 1}}".format(ks)
         session.execute(q)
-    session.
+    session.set_keyspace(ks)
+    
+    return Context(session=session)
 
 
 
