@@ -22,6 +22,12 @@ Please submit a GitHub issue requesting the dataset, with as much detail as poss
 
 ## Repository Layout Specification
 
+schema.cql will be run in the keyspace.
+
+data.cql will be run in the keyspace also.
+
+post_install.cql will be run after data.cql is imported.  this is preferred if there's a lot of data that might need to be downloaded from an external source.
+
 ## Contributing
 
 See the contributing doc.   
