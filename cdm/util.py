@@ -11,7 +11,7 @@ from docopt import docopt
 from cassandra.cluster import Cluster
 from cdm.util import *
 from cdm.context import Context
-
+import imp
 DATASETS_URL = "https://raw.githubusercontent.com/cassandra-data-manager/cdm/master/datasets.yaml"
 
 CDM_CACHE = os.getenv("CDM_CACHE", os.path.expanduser("~/.cdm/"))
@@ -82,10 +82,11 @@ def install(dataset, version="master"):
 
     context = Context(session=session)
     # run the post_install.py:main() if it exists
-    if os.path.exists(post_install_script):
+    if os.path.exists(post_install_script): # gross
         print "Running post install script"
-        post_install = import_module(post_install_script)
+        post_install = imp.load_source("post_install.main", post_install_script)
         post_install.main(context)
+        print "Post install done."
 
 
 def local_dataset_path(dataset_name):
