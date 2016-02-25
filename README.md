@@ -24,9 +24,9 @@ Please submit a GitHub issue requesting the dataset, with as much detail as poss
 
 schema.cql will be run in the keyspace.
 
-data.cql will be run in the keyspace also.
+data.cql will be run in the keyspace also.  This is only recommended for very small datasets - on the order of dozens or hundreds of records.
 
-post_install.cql will be run after data.cql is imported.  this is preferred if there's a lot of data that might need to be downloaded from an external source.
+post_install.cql will be run after data.cql is imported.  This is preferred if there's a lot of data that might need to be downloaded from an external source.
 
 ## Contributing
 
