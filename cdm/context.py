@@ -15,10 +15,13 @@ class Context(object):
             cache_dir = cache_dir + "/"
 
         self.cache_dir = cache_dir
+        if not os.path.exists(self.cache_dir):
+            raise Exception("Cache dir does not exist")
 
 
     def download(self, url):
         """
+        downloads a single file to the cache
         returns a file pointer
         auto caches download
 
@@ -36,6 +39,8 @@ class Context(object):
 
         fp = open(cache, 'r')
         return fp
+
+
 
 
 

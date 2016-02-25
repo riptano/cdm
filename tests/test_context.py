@@ -1,3 +1,4 @@
+import os
 from pytest import fixture
 
 from cdm.context import Context
@@ -19,14 +20,18 @@ def context():
                     replication = {{'class': \
                     'SimpleStrategy', \
                     'replication_factor': 1}}".format(ks)
-        session.execute(q)
-
+            session.execute(q)
+        if not os.path.exists("./cache"):
+            os.mkdir("./cache")
         session.set_keyspace(ks)
 
-    return Context(session=session)
+    return Context(dataset="test",
+                   session=session,
+                   cache_dir="./cache")
+
 
 
 def test_download(context):
-    pass
+    fp = context.download("http://rustyrazorblade.com/pages/about-me.html")
 
 
