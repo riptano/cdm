@@ -15,15 +15,10 @@ import sys
 sys.path.append("")
 import os
 import os.path
-import urllib2
-import subprocess
 
 # 3rd party
-import yaml
-from git import Repo
 
 from docopt import docopt
-from cassandra.cluster import Cluster
 from cdm.util import *
 
 DEBUG = False
