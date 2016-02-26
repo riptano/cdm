@@ -1,3 +1,4 @@
 *.pyc
 /Cassandra_Dataset_Manager.egg-info/
 /cache
+/.cache/

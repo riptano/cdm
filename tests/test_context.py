@@ -2,7 +2,7 @@ import os
 from pytest import fixture
 
 from cdm.context import Context
-from cassandra.cluster import Cluster
+from cassandra.clusterny import Cluster
 
 session = None
 
@@ -32,6 +32,7 @@ def context():
 
 
 def test_download(context):
+    context.clean_cache()
     fp = context.download("http://rustyrazorblade.com/pages/about-me.html")
 
 

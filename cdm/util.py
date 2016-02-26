@@ -1,15 +1,16 @@
 import os
 import os.path
+import subprocess
+import urllib2
 
+import yaml
 from git import Repo
 from importlib import import_module
-from docopt import docopt
-import subprocess
-import yaml
-from cassandra.cluster import Cluster
+from cassandra.cqlengine.connection import setup, get_session as get_db_session
 from cdm.util import *
 from cdm.context import Context
 import imp
+
 DATASETS_URL = "https://raw.githubusercontent.com/cassandra-data-manager/cdm/master/datasets.yaml"
 
 CDM_CACHE = os.getenv("CDM_CACHE", os.path.expanduser("~/.cdm/"))
@@ -47,6 +48,21 @@ def update_datasets():
     with open(CDM_PACKAGE_FILE, 'w') as d:
         d.write(data)
 
+def normalize_dataset_name(dataset):
+    return dataset.replace("-", "_")
+
+def get_session(dataset):
+    keyspace = normalize_dataset_name(dataset)
+    session = connect(keyspace=keyspace)
+
+    print "Creating keyspace"
+    if keyspace not in session.cluster.metadata.keyspaces:
+        cql = "create KEYSPACE {} WITH replication = {{'class': 'SimpleStrategy', 'replication_factor': 1}}".format(keyspace)
+        session.execute(cql)
+
+    session.set_keyspace(keyspace)
+    return session
+
 def install(dataset, version="master", install_graph=False, install_search=False):
     print "Installing dataset {}=={}".format(dataset, version)
     y = open_datasets()
@@ -58,61 +74,67 @@ def install(dataset, version="master", install_graph=False, install_search=False
     repo.git.checkout(version)
 
     print "Connecting"
-    session = connect()
-
-    print "Creating keyspace"
-    if dataset not in session.cluster.metadata.keyspaces:
-        cql = "create KEYSPACE {} WITH replication = {{'class': 'SimpleStrategy', 'replication_factor': 1}}".format(dataset)
-        session.execute(cql)
-
-    session.set_keyspace(dataset)
+    session = get_session(dataset)
     # load the schema
     schema = local_dataset_path(dataset) + "/schema.cql"
+    keyspace = normalize_dataset_name(dataset)
 
-    # i'm so sorry for the following code...
-    print "Applying schema {}".format(schema)
-    command = "cqlsh -k {} -f {} ".format(dataset, schema)
-    print command
-    subprocess.call(command, shell=True)
-    # check for CQL file loading options?
-    # check for python loading options
     cache_dir = CDM_CACHE + dataset + "_cache"
     if not os.path.exists(cache_dir):
         os.mkdir(cache_dir)
-
     context = Context(dataset=dataset,
                       session=session,
                       cache_dir=cache_dir)
 
-    post_install_script = local_dataset_path(dataset) + "/post_install.py"
-    # run the post_install.py:main() if it exists
-    if os.path.exists(post_install_script): # gross
-        print "Running post install script"
-        post_install = imp.load_source("post_install.main", post_install_script)
-        post_install.main(context)
-        print "Post install done."
 
-    if install_search:
-        post_install_script = local_dataset_path(dataset) + "/post_install_search.py"
-        # run the post_install.py:main() if it exists
-        if os.path.exists(post_install_script): # gross
-            print "Running post install search script"
-            post_install = imp.load_source("post_install_search.main", post_install_script)
-            post_install.main(context)
-            print "Post install done."
-        else:
-            print "Search requested but not found"
+    # i'm so sorry for the following code...
+    # everything needs to move into the context
+    print "Applying schema {}".format(schema)
+    command = "cqlsh -k {} -f {} ".format(keyspace, schema)
+    print command
+    subprocess.call(command, shell=True)
+    # check for CQL file loading options?
+    # check for python loading options
 
-    if install_graph:
-        post_install_script = local_dataset_path(dataset) + "/post_install_graph.py"
-        # run the post_install.py:main() if it exists
+    def run_post_install(name):
+        post_install_script = local_dataset_path(dataset) + "{}.py".format(name)
         if os.path.exists(post_install_script): # gross
             print "Running post install script"
-            post_install = imp.load_source("post_install_graph.main", post_install_script)
+            post_install = imp.load_source("{}.main".format(name), post_install_script)
             post_install.main(context)
             print "Post install done."
-        else:
-            print "Graph requested but not found"
+    for x in ["post_install", "post_install_search", "post_install_graph"]:
+        run_post_install(x)
+
+    # post_install_script = local_dataset_path(dataset) + "/post_install.py"
+    # # run the post_install.py:main() if it exists
+    # if os.path.exists(post_install_script): # gross
+    #     print "Running post install script"
+    #     post_install = imp.load_source("post_install.main", post_install_script)
+    #     post_install.main(context)
+    #     print "Post install done."
+    #
+    # if install_search:
+    #     post_install_script = local_dataset_path(dataset) + "/post_install_search.py"
+    #     # run the post_install.py:main() if it exists
+    #     if os.path.exists(post_install_script): # gross
+    #         print "Running post install search script"
+    #         post_install = imp.load_source("post_install_search.main", post_install_script)
+    #         post_install.main(context)
+    #         print "Post install done."
+    #     else:
+    #         print "Search requested but not found"
+    #
+    # if install_graph:
+    #     post_install_script = local_dataset_path(dataset) + "/post_install_graph.py"
+    #     # run the post_install.py:main() if it exists
+    #     if os.path.exists(post_install_script): # gross
+    #         print "Running post install script"
+    #         post_install = imp.load_source("post_install_graph.main", post_install_script)
+    #         post_install.main(context)
+    #         print "Post install done."
+    #     else:
+    #         print "Graph requested but not found"
 
 
 def local_dataset_path(dataset_name):
@@ -136,9 +158,11 @@ def download_dataset(dataset_name, dataset_url):
     return repo
 
 
-# returns a new Cluster
+# returns a new session
 def connect(host="localhost", port=9042, keyspace=None):
-    return Cluster([host]).connect()
+    setup([host], keyspace)
+    # session = Cluster([host]).connect()
+    return get_db_session()
 
 def create_keyspace():
     # TODO ask for strategy and RF

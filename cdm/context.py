@@ -6,6 +6,7 @@ class Context(object):
     session = None
     cache_dir = None
     dataset = None
+    keyspace = None
 
     def __init__(self, dataset, session, cache_dir):
         self.dataset = dataset
@@ -41,8 +42,19 @@ class Context(object):
         return fp
 
 
+    def clean_cache(self):
+        """
+        removes all data from this cache directory
+        :return: None
+        """
+        for file in os.listdir(self.cache_dir):
+            print os.remove(self.cache_dir + file)
 
 
+    def feedback(self, msg):
+        print msg
 
 
+    def install(self):
+        pass
 
