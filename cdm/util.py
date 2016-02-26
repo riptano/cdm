@@ -97,44 +97,17 @@ def install(dataset, version="master", install_graph=False, install_search=False
     # check for python loading options
 
     def run_post_install(name):
-        post_install_script = local_dataset_path(dataset) + "{}.py".format(name)
+        post_install_script = local_dataset_path(dataset) + "/{}.py".format(name)
+        print "Checking ", post_install_script
         if os.path.exists(post_install_script): # gross
             print "Running post install script"
             post_install = imp.load_source("{}.main".format(name), post_install_script)
             post_install.main(context)
             print "Post install done."
+
     for x in ["post_install", "post_install_search", "post_install_graph"]:
         run_post_install(x)
 
-    # post_install_script = local_dataset_path(dataset) + "/post_install.py"
-    # # run the post_install.py:main() if it exists
-    # if os.path.exists(post_install_script): # gross
-    #     print "Running post install script"
-    #     post_install = imp.load_source("post_install.main", post_install_script)
-    #     post_install.main(context)
-    #     print "Post install done."
-    #
-    # if install_search:
-    #     post_install_script = local_dataset_path(dataset) + "/post_install_search.py"
-    #     # run the post_install.py:main() if it exists
-    #     if os.path.exists(post_install_script): # gross
-    #         print "Running post install search script"
-    #         post_install = imp.load_source("post_install_search.main", post_install_script)
-    #         post_install.main(context)
-    #         print "Post install done."
-    #     else:
-    #         print "Search requested but not found"
-    #
-    # if install_graph:
-    #     post_install_script = local_dataset_path(dataset) + "/post_install_graph.py"
-    #     # run the post_install.py:main() if it exists
-    #     if os.path.exists(post_install_script): # gross
-    #         print "Running post install script"
-    #         post_install = imp.load_source("post_install_graph.main", post_install_script)
-    #         post_install.main(context)
-    #         print "Post install done."
-    #     else:
-    #         print "Graph requested but not found"
 
 
 def local_dataset_path(dataset_name):
