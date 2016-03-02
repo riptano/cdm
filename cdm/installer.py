@@ -3,8 +3,8 @@ import subprocess
 class Installer(object):
     context = None
 
-    search = False
-    graph = False
+    _search = False
+    _graph = False
 
 
     def __init__(self, context):
@@ -15,7 +15,7 @@ class Installer(object):
         # will get called after init
         self.context.feedback("Post init, nothing to do.")
 
-    def install(self):
+    def _install(self):
         self.install_schema()
         self.post_init()
 

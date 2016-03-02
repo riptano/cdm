@@ -82,10 +82,7 @@ def install(dataset, version="master", install_graph=False, install_search=False
     session = get_session(dataset)
     # load the schema
     path = local_dataset_path(dataset)
-    sys.path.extend(path)
-
-    schema = path + "/schema.cql"
-    keyspace = normalize_dataset_name(dataset)
+    sys.path.extend(path) # so imports work
 
     cache_dir = CDM_CACHE + dataset + "_cache"
     if not os.path.exists(cache_dir):
@@ -96,7 +93,6 @@ def install(dataset, version="master", install_graph=False, install_search=False
                       session=session,
                       cache_dir=cache_dir)
 
-    # post_install = imp.load_source("{}.main".format(name), post_install_script)
     post_install = local_dataset_path(dataset) + "/install.py"
     context.feedback("Loading installer {}".format(post_install))
     module = imp.load_source("Installer", post_install)
@@ -112,7 +108,7 @@ def install(dataset, version="master", install_graph=False, install_search=False
     installer = matching[0](context)
     installer.search = install_search
     installer.graph = install_graph
-    installer.install()
+    installer._install()
 
 
 
