@@ -2,7 +2,7 @@ import os
 from pytest import fixture
 
 from cdm.context import Context
-from cassandra.clusterny import Cluster
+from cassandra.cluster import Cluster
 
 session = None
 

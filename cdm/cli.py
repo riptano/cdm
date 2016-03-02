@@ -5,7 +5,10 @@ Usage:
     cdm list [<term>]
     cdm show <dataset>
     cdm install [--host=<host>] [--keyspace=<keyspace>] [--dry-run] [--graph] [--search] <dataset>
+    cdm install-local [--host=<host>] [--keyspace=<keyspace>] [--dry-run] [--graph] [--search] <dataset>
     cdm update
+    cdm stream <dataset>
+    cdm web
 
 Examples:
     cdm install demo
