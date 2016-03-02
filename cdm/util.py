@@ -12,6 +12,7 @@ from cdm.context import Context
 import imp
 import inspect
 from cdm.installer import Installer
+import sys
 
 DATASETS_URL = "https://raw.githubusercontent.com/cassandra-data-manager/cdm/master/datasets.yaml"
 
@@ -80,7 +81,10 @@ def install(dataset, version="master", install_graph=False, install_search=False
     print "Connecting"
     session = get_session(dataset)
     # load the schema
-    schema = local_dataset_path(dataset) + "/schema.cql"
+    path = local_dataset_path(dataset)
+    sys.path.extend(path)
+
+    schema = path + "/schema.cql"
     keyspace = normalize_dataset_name(dataset)
 
     cache_dir = CDM_CACHE + dataset + "_cache"
@@ -106,6 +110,8 @@ def install(dataset, version="master", install_graph=False, install_search=False
 
 
     installer = matching[0](context)
+    installer.search = install_search
+    installer.graph = install_graph
     installer.install()
 
 

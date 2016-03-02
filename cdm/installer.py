@@ -13,11 +13,12 @@ class Installer(object):
 
     def post_init(self):
         # will get called after init
-        pass
+        self.context.feedback("Post init, nothing to do.")
 
     def install(self):
         self.install_schema()
-        
+        self.post_init()
+
         self.install_cassandra()
         if self.search:
             self.install_search()
