@@ -95,6 +95,8 @@ def install(dataset, version="master", install_graph=False, install_search=False
     subprocess.call(command, shell=True)
     # check for CQL file loading options?
     # check for python loading options
+    
+
 
     def run_post_install(name):
         post_install_script = local_dataset_path(dataset) + "/{}.py".format(name)
