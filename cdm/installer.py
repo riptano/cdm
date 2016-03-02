@@ -14,10 +14,12 @@ class Installer(object):
         raise NotImplementedError("Cassandra data required")
 
     def install_search(self):
-        pass
+        self.context.feedback("Search requested but not implemented")
+        raise NotImplementedError()
 
     def install_graph(self):
-        pass
+        self.context.feedback("Graph requested but not implemented")
+        raise NotImplementedError()
 
 
 

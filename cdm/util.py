@@ -10,11 +10,15 @@ from cassandra.cqlengine.connection import setup, get_session as get_db_session
 from cdm.util import *
 from cdm.context import Context
 import imp
+import inspect
+from cdm.installer import Installer
 
 DATASETS_URL = "https://raw.githubusercontent.com/cassandra-data-manager/cdm/master/datasets.yaml"
 
 CDM_CACHE = os.getenv("CDM_CACHE", os.path.expanduser("~/.cdm/"))
 CDM_PACKAGE_FILE = CDM_CACHE + "datasets.yaml"
+
+class InstallerNotFound(Exception): pass
 
 def list_datasets(search):
     print "Available datasets:"
@@ -95,20 +99,32 @@ def install(dataset, version="master", install_graph=False, install_search=False
     subprocess.call(command, shell=True)
     # check for CQL file loading options?
     # check for python loading options
-    
+
+    # post_install = imp.load_source("{}.main".format(name), post_install_script)
+    post_install = local_dataset_path(dataset) + "/install.py"
+    context.feedback("Loading installer {}".format(post_install))
+    module = imp.load_source("Installer", post_install)
+    members = inspect.getmembers(module)
+
+    matching = [c for (name, c) in members if isinstance(c, type)
+                                            and c is not Installer
+                                            and issubclass(c, Installer)]
+    if not matching:
+        raise InstallerNotFound()
 
 
-    def run_post_install(name):
-        post_install_script = local_dataset_path(dataset) + "/{}.py".format(name)
-        print "Checking ", post_install_script
-        if os.path.exists(post_install_script): # gross
-            print "Running post install script"
-            post_install = imp.load_source("{}.main".format(name), post_install_script)
-            post_install.main(context)
-            print "Post install done."
+    installer = matching[0](context)
+    installer.install_cassandra()
 
-    for x in ["post_install", "post_install_search", "post_install_graph"]:
-        run_post_install(x)
+    if install_search:
+        context.feedback("Search installed")
+        install_search()
+
+    if install_graph:
+        context.feedback("Search installed")
+        install_graph()
+
+
 
 
 
