@@ -86,19 +86,11 @@ def install(dataset, version="master", install_graph=False, install_search=False
     cache_dir = CDM_CACHE + dataset + "_cache"
     if not os.path.exists(cache_dir):
         os.mkdir(cache_dir)
-    context = Context(dataset=dataset,
+
+    context = Context(root=local_dataset_path(dataset),
+                      dataset=dataset,
                       session=session,
                       cache_dir=cache_dir)
-
-
-    # i'm so sorry for the following code...
-    # everything needs to move into the context
-    print "Applying schema {}".format(schema)
-    command = "cqlsh -k {} -f {} ".format(keyspace, schema)
-    print command
-    subprocess.call(command, shell=True)
-    # check for CQL file loading options?
-    # check for python loading options
 
     # post_install = imp.load_source("{}.main".format(name), post_install_script)
     post_install = local_dataset_path(dataset) + "/install.py"
@@ -114,17 +106,7 @@ def install(dataset, version="master", install_graph=False, install_search=False
 
 
     installer = matching[0](context)
-    installer.install_cassandra()
-
-    if install_search:
-        context.feedback("Search installed")
-        install_search()
-
-    if install_graph:
-        context.feedback("Search installed")
-        install_graph()
-
-
+    installer.install()
 
 
 

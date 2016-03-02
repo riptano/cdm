@@ -3,12 +3,14 @@ from base64 import b64encode
 import os.path
 
 class Context(object):
+    root = None
     session = None
     cache_dir = None
     dataset = None
     keyspace = None
 
-    def __init__(self, dataset, session, cache_dir):
+    def __init__(self, root, dataset, session, cache_dir):
+        self.root = root
         self.dataset = dataset
         self.session = session
         # add trailing slash
