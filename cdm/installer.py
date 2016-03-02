@@ -17,7 +17,8 @@ class Installer(object):
 
     def install(self):
         self.install_schema()
-
+        
+        self.install_cassandra()
         if self.search:
             self.install_search()
         if self.graph:
