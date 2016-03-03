@@ -8,6 +8,7 @@ Usage:
     cdm update
     cdm stream <dataset>
     cdm web
+    cdm tutorials <dataset>
 
 Examples:
     cdm install demo
