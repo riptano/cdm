@@ -11,6 +11,14 @@ from cassandra.cqlengine.connection import setup, get_session as get_db_session
 
 # try to import the dse session
 # if it works, monkey patch cqlengine to use dse session
+
+try:
+    from dse.cluster import Cluster
+    from cassandra.cqlengine import connection
+    connection.Cluster = Cluster
+except:
+    pass
+
 from cdm.util import *
 from cdm.context import Context
 import imp
@@ -93,7 +101,6 @@ def install(dataset, version="master", install_graph=False, install_search=False
 
     print "Connecting"
     session = get_session(dataset)
-
     # load the schema
 
     if not os.path.exists(cache_dir):
