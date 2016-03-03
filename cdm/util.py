@@ -6,7 +6,11 @@ import urllib2
 import yaml
 from git import Repo
 from importlib import import_module
+
 from cassandra.cqlengine.connection import setup, get_session as get_db_session
+
+# try to import the dse session
+# if it works, monkey patch cqlengine to use dse session
 from cdm.util import *
 from cdm.context import Context
 import imp
@@ -110,6 +114,8 @@ def install(dataset, version="master", install_graph=False, install_search=False
     installer.graph = install_graph
     installer._install()
 
+def install_local(path, install_search, install_graph):
+    pass
 
 
 def local_dataset_path(dataset_name):

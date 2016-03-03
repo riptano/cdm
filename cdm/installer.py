@@ -18,6 +18,7 @@ class Installer(object):
     def _install(self):
         self.install_schema()
         self.post_init()
+        self.context.feedback("post_init() complete, installing data")
 
         self.install_cassandra()
         if self.search:
