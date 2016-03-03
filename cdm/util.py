@@ -79,8 +79,8 @@ def install(dataset, version="master", install_graph=False, install_search=False
         dataset = "test"
         cache_dir = ".cdmcache"
     else:
-        repo = download_dataset(dataset, y[dataset]['url'])
         y = open_datasets()
+        repo = download_dataset(dataset, y[dataset]['url'])
 
         # returns the git repo
         # we should be on master now
@@ -94,7 +94,7 @@ def install(dataset, version="master", install_graph=False, install_search=False
     session = get_session(dataset)
 
     # load the schema
-    sys.path.extend(path) # so imports work
+    sys.path.append(path) # so imports work
 
     if not os.path.exists(cache_dir):
         os.mkdir(cache_dir)
