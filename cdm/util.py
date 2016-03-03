@@ -89,12 +89,12 @@ def install(dataset, version="master", install_graph=False, install_search=False
         path = local_dataset_path(dataset)
         # this should be keyspace
         cache_dir = CDM_CACHE + dataset + "_cache"
+        sys.path.append(path) # so imports work
 
     print "Connecting"
     session = get_session(dataset)
 
     # load the schema
-    sys.path.append(path) # so imports work
 
     if not os.path.exists(cache_dir):
         os.mkdir(cache_dir)
