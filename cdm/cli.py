@@ -4,7 +4,7 @@ Usage:
     cdm search [<term>]
     cdm list [<term>]
     cdm show <dataset>
-    cdm install [--host=<host>] [--keyspace=<keyspace>] [--dry-run] [--graph] [--search] <dataset>
+    cdm install [--host=<host>] [--keyspace=<keyspace>] [--dry-run] [--nocassandra] [--graph] [--search] <dataset>
     cdm update
     cdm stream <dataset>
     cdm web
@@ -49,6 +49,7 @@ def main():
             tmp.append("master")
 
         return install(tmp[0], tmp[1],
+                       install_cassandra=not arguments['--nocassandra'],
                        install_graph=arguments['--graph'],
                        install_search=arguments['--search'])
 

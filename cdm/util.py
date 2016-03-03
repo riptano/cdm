@@ -12,13 +12,6 @@ from cassandra.cqlengine.connection import setup, get_session as get_db_session
 # try to import the dse session
 # if it works, monkey patch cqlengine to use dse session
 
-try:
-    from dse.cluster import Cluster
-    from cassandra.cqlengine import connection
-    connection.Cluster = Cluster
-except:
-    pass
-
 from cdm.util import *
 from cdm.context import Context
 import imp
@@ -68,8 +61,17 @@ def update_datasets():
 def normalize_dataset_name(dataset):
     return dataset.replace("-", "_")
 
-def get_session(dataset):
+def get_session(dataset, graph=False):
     keyspace = normalize_dataset_name(dataset)
+    if graph:
+        try:
+            from dse.cluster import Cluster
+            from cassandra.cqlengine import connection
+            connection.Cluster = Cluster
+            print "Graph support enabled"
+        except:
+            pass
+
     session = connect(keyspace=keyspace)
 
     print "Creating keyspace"
@@ -77,10 +79,28 @@ def get_session(dataset):
         cql = "create KEYSPACE {} WITH replication = {{'class': 'SimpleStrategy', 'replication_factor': 1}}".format(keyspace)
         session.execute(cql)
 
+    if graph:
+        graph_keyspace = keyspace + "_graph"
+
+
+        try:
+            session.execute_graph("system.dropGraph('{}')".format(graph_keyspace))
+        except:
+            pass
+
+        session.execute_graph("system.createGraph('{}').build()".format(graph_keyspace))
+        session.default_graph_options.graph_name = graph_keyspace
+        print "Created graph keyspace {}".format(graph_keyspace)
+
+
     session.set_keyspace(keyspace)
     return session
 
-def install(dataset, version="master", install_graph=False, install_search=False):
+def install(dataset,
+            version="master",
+            install_cassandra=True,
+            install_graph=False,
+            install_search=False):
 
     if dataset == ".":
         path = "."
@@ -100,7 +120,7 @@ def install(dataset, version="master", install_graph=False, install_search=False
         sys.path.append(path) # so imports work
 
     print "Connecting"
-    session = get_session(dataset)
+    session = get_session(dataset, install_graph)
     # load the schema
 
     if not os.path.exists(cache_dir):
@@ -111,6 +131,7 @@ def install(dataset, version="master", install_graph=False, install_search=False
                       session=session,
                       cache_dir=cache_dir)
 
+    # TODO move to tested function
     post_install = path + "/install.py"
     context.feedback("Loading installer {}".format(post_install))
     module = imp.load_source("Installer", post_install)
@@ -124,8 +145,9 @@ def install(dataset, version="master", install_graph=False, install_search=False
 
 
     installer = matching[0](context)
-    installer.search = install_search
-    installer.graph = install_graph
+    installer._cassandra = install_cassandra
+    installer._search = install_search
+    installer._graph = install_graph
     installer._install()
 
 def install_local(path, install_search, install_graph):
@@ -154,7 +176,7 @@ def download_dataset(dataset_name, dataset_url):
 
 
 # returns a new session
-def connect(host="localhost", port=9042, keyspace=None):
+def connect(host="localhost", port=9042, keyspace=None, graph=False):
     setup([host], keyspace)
     # session = Cluster([host]).connect()
     return get_db_session()

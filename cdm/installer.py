@@ -5,6 +5,7 @@ class Installer(object):
 
     _search = False
     _graph = False
+    _cassandra = True
 
 
     def __init__(self, context):
@@ -18,12 +19,13 @@ class Installer(object):
     def _install(self):
         self.install_schema()
         self.post_init()
-        self.context.feedback("post_init() complete, installing data")
+        self.context.feedback("post_init() complete")
 
-        self.install_cassandra()
-        if self.search:
+        if self._cassandra:
+            self.install_cassandra()
+        if self._search:
             self.install_search()
-        if self.graph:
+        if self._graph:
             self.install_graph()
 
         self.context.feedback("Done with install.")
