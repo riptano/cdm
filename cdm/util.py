@@ -73,31 +73,38 @@ def get_session(dataset):
     return session
 
 def install(dataset, version="master", install_graph=False, install_search=False):
-    print "Installing dataset {}=={}".format(dataset, version)
-    y = open_datasets()
 
-    # returns the git repo
-    repo = download_dataset(dataset, y[dataset]['url'])
-    # we should be on master now
-    # do I need a specific version?
-    repo.git.checkout(version)
+    if dataset == ".":
+        path = "."
+        dataset = "test"
+        cache_dir = ".cdmcache"
+    else:
+        repo = download_dataset(dataset, y[dataset]['url'])
+        y = open_datasets()
+
+        # returns the git repo
+        # we should be on master now
+        # do I need a specific version?
+        repo.git.checkout(version)
+        path = local_dataset_path(dataset)
+        # this should be keyspace
+        cache_dir = CDM_CACHE + dataset + "_cache"
 
     print "Connecting"
     session = get_session(dataset)
+
     # load the schema
-    path = local_dataset_path(dataset)
     sys.path.extend(path) # so imports work
 
-    cache_dir = CDM_CACHE + dataset + "_cache"
     if not os.path.exists(cache_dir):
         os.mkdir(cache_dir)
 
-    context = Context(root=local_dataset_path(dataset),
+    context = Context(root=path,
                       dataset=dataset,
                       session=session,
                       cache_dir=cache_dir)
 
-    post_install = local_dataset_path(dataset) + "/install.py"
+    post_install = path + "/install.py"
     context.feedback("Loading installer {}".format(post_install))
     module = imp.load_source("Installer", post_install)
     members = inspect.getmembers(module)

@@ -44,12 +44,11 @@ def main():
 
     if arguments["install"]:
         tmp = arguments["<dataset>"].split("==")
-        if len(tmp) == 1: tmp.append("master")
 
-        if tmp[0] == ".":
-            return install_local(os.getcwd(), arguments["--search"], arguments["--graph"])
-        else:
-            return install(tmp[0], tmp[1],
+        if len(tmp) == 1:
+            tmp.append("master")
+
+        return install(tmp[0], tmp[1],
                        install_graph=arguments['--graph'],
                        install_search=arguments['--search'])
 

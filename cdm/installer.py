@@ -26,6 +26,8 @@ class Installer(object):
         if self.graph:
             self.install_graph()
 
+        self.context.feedback("Done with install.")
+
     def install_schema(self):
         # do not override
         self.context.feedback("Applying schema {}".format(self.schema))
