@@ -9,14 +9,15 @@ setup(
         license='License :: OSI Approved :: BSD License',
         author='Jon Haddad',
         author_email='jon@jonhaddad.com',
-        description='Utility for quickly setting up sample datasets for Cassandra',
+        description='Utility for quickly setting up sample datasets for Cassandra and DataStax Enterprise',
         entry_points={
             'console_scripts': [
                 'cdm=cdm.cli:main'
             ]
         },
         install_requires=[
-            "cassandra-driver", "docopt>=0.6.1", "gitpython", "PyYAML", "pandas"
+            "cassandra-driver", "docopt>=0.6.1",
+            "gitpython", "PyYAML", "pandas>=0.17.1"
         ]
 
 )
