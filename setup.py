@@ -12,7 +12,8 @@ setup(
         description='Utility for quickly setting up sample datasets for Cassandra',
         entry_points={
             'console_scripts': [
-                'cdm=cdm.cli:main'
+                'cdm=cdm.cli:main',
+                'graph=cdm.graph:main'
             ]
         },
         install_requires=[
