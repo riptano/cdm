@@ -1,13 +1,6 @@
 from dse.cluster import Cluster
-import readline
 import code
 import sys
-
-class GraphRepl(code.InteractiveConsole):
-    def compile_command(self, code, **kwargs):
-        import ipdb; ipdb.set_trace()
-        pass
-
 
 
 def main():
@@ -15,10 +8,24 @@ def main():
     session.default_graph_options.graph_name = sys.argv[1]
 
     while True:
-        input = GraphRepl().raw_input("gremlin> ")
-        result = session.execute_graph(input)
-        for x in result:
-            print x
+        input = code.InteractiveConsole().raw_input("gremlin> ")
+        if input == "quit" or input == "exit":
+            break
+        try:
+            result = session.execute_graph(input)
+        except Exception as e:
+            print e
+            continue
+
+        for row in result:
+            tmp = {}
+            for name, val in row.properties.iteritems():
+                props = [p['value'] for p in val]
+                if len(props) == 1:
+                    tmp[name] = props[0]
+                else:
+                    tmp[name] = props
+            print tmp
 
 if __name__ == "__main__":
     main()
