@@ -17,7 +17,8 @@ setup(
         },
         install_requires=[
             "cassandra-driver", "docopt>=0.6.1",
-            "gitpython", "PyYAML", "pandas>=0.17.1"
+            "gitpython", "PyYAML", "pandas>=0.17.1",
+            "recommonmark==0.4.0"
         ]
 
 )
