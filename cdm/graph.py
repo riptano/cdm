@@ -6,11 +6,32 @@ import sys
 def main():
     session = Cluster().connect()
     session.default_graph_options.graph_name = sys.argv[1]
+    accum = None
+    eof = None
 
     while True:
-        input = code.InteractiveConsole().raw_input("gremlin> ")
+        prompt = "gremlin> " if eof is None else "gremlin (cont)> "
+
+        input = code.InteractiveConsole().raw_input(prompt)
+        if input.startswith("<<"):
+            # heredoc
+            print "Multiline mode activated"
+            eof = input[2:]
+            accum = []
+            continue
+
+        if eof and input == eof:
+            eof = None
+            input = "\n".join(accum)
+            print input
+
+        elif eof:
+            accum.append(input)
+            continue
+
         if input == "quit" or input == "exit":
             break
+
         try:
             result = session.execute_graph(input)
         except Exception as e:
