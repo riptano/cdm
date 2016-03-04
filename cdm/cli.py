@@ -29,7 +29,6 @@ DEBUG = False
 
 def main():
     arguments = docopt(__doc__)
-    print arguments
 
     try:
         os.mkdir(CDM_CACHE)
