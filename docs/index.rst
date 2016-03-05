@@ -11,6 +11,10 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   usage
+   datasets
+   faq
+
 
 
 Indices and tables
