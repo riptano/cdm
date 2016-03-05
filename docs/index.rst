@@ -6,7 +6,7 @@
 Cassandra Dataset Manager
 ==========================
 
-Cassandra Dataset Manager, (cdm) is a tool to make
+Cassandra Dataset Manager, (cdm) is a tool to make it simple to get started with Apache Cassandra or Datastax Enterprise (DSE).
 
 
 Contents:
