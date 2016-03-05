@@ -2,6 +2,8 @@ from dse.cluster import Cluster
 import code
 import sys
 
+def print_vertex(v):
+    pass
 
 def main():
     session = Cluster().connect()
@@ -9,10 +11,13 @@ def main():
     accum = None
     eof = None
 
+    print "Gremlin REPL, use heredocs for multiline ex:<<EOF"
+    console = code.InteractiveConsole()
+
     while True:
         prompt = "gremlin> " if eof is None else "gremlin (cont)> "
+        input = console.raw_input(prompt)
 
-        input = code.InteractiveConsole().raw_input(prompt)
         if input.startswith("<<"):
             # heredoc
             print "Multiline mode activated"
