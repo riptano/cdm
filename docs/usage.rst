@@ -4,13 +4,15 @@
 Usage
 ======
 
+Installing the cdm package will set up a :bash:`cdm` executable.
+
 Installing Datasets
 ---------------------
 
 :bash:`cdm install <dataset>`
 
 Updating the local database
-------------------------
+-----------------------------
 
 :bash:`cdm update` will update the local database.
 
@@ -29,4 +31,7 @@ Web Interface
 -------------
 
 Coming soon.
+
+Streaming
+------------
 
