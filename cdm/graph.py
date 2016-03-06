@@ -68,6 +68,11 @@ def main():
         if input == "quit" or input == "exit":
             break
 
+        # special commands
+        if input == "%schema":
+            continue
+
+
         try:
             result = session.execute_graph(input)
             # readline.add_history(input)
