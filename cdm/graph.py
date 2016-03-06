@@ -4,6 +4,8 @@ import sys
 import readline
 from cassandra.cluster import ResultSet
 import os
+from colorama import Fore, Style
+
 histfile = os.path.join(os.path.expanduser("~"), ".dsegraphhist")
 
 try:
@@ -24,7 +26,7 @@ def print_vertex(row):
             tmp[name] = props[0]
         else:
             tmp[name] = props
-    print "vertex", tmp
+    print "Vertex[{}{}{}]".format(Fore.BLUE, row.label, Style.RESET_ALL), tmp
 
 def print_result_set(result):
     for row in result:
