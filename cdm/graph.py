@@ -4,7 +4,8 @@ import sys
 import readline
 from cassandra.cluster import ResultSet
 import os
-from colorama import Fore, Style
+from colorama import Fore, Style, init
+init()
 
 histfile = os.path.join(os.path.expanduser("~"), ".dsegraphhist")
 
