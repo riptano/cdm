@@ -33,7 +33,7 @@ def print_result_set(result):
         if row.type == "vertex":
             print_vertex(row)
         elif row.type == "edge":
-            print "edge", row.properties
+            print "Edge[{}{}{}]".format(Fore.BLUE, row.label, Style.RESET_ALL), row.properties
 
 
 def main():
