@@ -3,3 +3,5 @@
 /cache
 /.cache/
 docs/_build/
+build/
+dist/

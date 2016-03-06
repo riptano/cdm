@@ -1,9 +1,26 @@
 from dse.cluster import Cluster
 import code
 import sys
+import readline
+from cassandra.cluster import ResultSet
 
-def print_vertex(v):
-    pass
+def print_vertex(row):
+    tmp = {}
+    for name, val in row.properties.iteritems():
+        props = [p['value'] for p in val]
+        if len(props) == 1:
+            tmp[name] = props[0]
+        else:
+            tmp[name] = props
+    print "vertex", tmp
+
+def print_result_set(result):
+    for row in result:
+        if row.type == "vertex":
+            print_vertex(row)
+        elif row.type == "edge":
+            print "edge", row.properties
+
 
 def main():
     session = Cluster().connect()
@@ -12,11 +29,10 @@ def main():
     eof = None
 
     print "Gremlin REPL, use heredocs for multiline ex:<<EOF"
-    console = code.InteractiveConsole()
 
     while True:
         prompt = "gremlin> " if eof is None else "gremlin (cont)> "
-        input = console.raw_input(prompt)
+        input = raw_input(prompt)
 
         if input.startswith("<<"):
             # heredoc
@@ -39,19 +55,19 @@ def main():
 
         try:
             result = session.execute_graph(input)
+            # readline.add_history(input)
         except Exception as e:
             print e
             continue
+            
+        if isinstance(result, ResultSet):
+            print_result_set(result)
+        else:
+            try:
+                print result
+            except Exception as e:
+                print e
 
-        for row in result:
-            tmp = {}
-            for name, val in row.properties.iteritems():
-                props = [p['value'] for p in val]
-                if len(props) == 1:
-                    tmp[name] = props[0]
-                else:
-                    tmp[name] = props
-            print tmp
 
 if __name__ == "__main__":
     main()
