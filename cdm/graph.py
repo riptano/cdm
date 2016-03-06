@@ -3,6 +3,18 @@ import code
 import sys
 import readline
 from cassandra.cluster import ResultSet
+import os
+histfile = os.path.join(os.path.expanduser("~"), ".dsegraphhist")
+
+try:
+    readline.read_history_file(histfile)
+    # default history len is -1 (infinite), which may grow unruly
+    readline.set_history_length(100)
+except IOError:
+    pass
+
+import atexit
+atexit.register(readline.write_history_file, histfile)
 
 def print_vertex(row):
     tmp = {}
@@ -59,7 +71,7 @@ def main():
         except Exception as e:
             print e
             continue
-            
+
         if isinstance(result, ResultSet):
             print_result_set(result)
         else:
