@@ -31,7 +31,9 @@ def print_vertex(row):
 
 def print_result_set(result):
     for row in result:
-        if row.type == "vertex":
+        if hasattr(row, 'value'):
+            print row.value
+        elif row.type == "vertex":
             print_vertex(row)
         elif row.type == "edge":
             print "Edge[{}{}{}]".format(Fore.BLUE, row.label, Style.RESET_ALL), row.properties
