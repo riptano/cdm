@@ -2,3 +2,5 @@ mock
 ipython
 pytest
 ipdb
+sphinx
+
