@@ -2,12 +2,12 @@ from dse.cluster import Cluster
 from dse.graph import SimpleGraphStatement
 import code
 import sys
-import readline
 from cassandra.cluster import ResultSet
 import os
 from colorama import Fore, Style, init
-init(autoreset=True)
-
+import readline
+init()
+import time
 histfile = os.path.join(os.path.expanduser("~"), ".dsegraphhist")
 
 try:
@@ -53,6 +53,8 @@ def main():
     while True:
         prompt = "gremlin> " if eof is None else "gremlin (cont)> "
         input = raw_input(prompt)
+        output_time = False
+        start_time = time.time()
 
         if input.startswith("<<"):
             # heredoc
@@ -73,20 +75,21 @@ def main():
         if input == "quit" or input == "exit":
             break
 
-        # special commands
         if input == "%schema":
             continue
 
 
+        total_time = None
         try:
             stmt = SimpleGraphStatement(input)
 
             if input.startswith("a"):
-                print Fore.GREEN + "Spark Graph Traversal Enabled, this may take a while..."
+                print Fore.GREEN + "Spark Graph Traversal Enabled, this may take a while..." + Style.RESET_ALL
                 stmt.options.graph_source = "a"
                 stmt.options.graph_alias = "a"
-
+            start = time.time()
             result = session.execute_graph(stmt)
+            total_time = time.time() - start
 
         except Exception as e:
             print e
@@ -94,6 +97,8 @@ def main():
 
         if isinstance(result, ResultSet):
             print_result_set(result)
+            if total_time:
+                print Fore.RED + "Query Time: {}s".format(round(total_time, 3)) + Style.RESET_ALL
         else:
             try:
 
@@ -104,3 +109,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
