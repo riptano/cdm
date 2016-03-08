@@ -1,11 +1,12 @@
 from dse.cluster import Cluster
+from dse.graph import SimpleGraphStatement
 import code
 import sys
 import readline
 from cassandra.cluster import ResultSet
 import os
 from colorama import Fore, Style, init
-init()
+init(autoreset=True)
 
 histfile = os.path.join(os.path.expanduser("~"), ".dsegraphhist")
 
@@ -31,17 +32,19 @@ def print_vertex(row):
 
 def print_result_set(result):
     for row in result:
-        if hasattr(row, 'value'):
+        if hasattr(row, 'type'):
+            if row.type == "vertex":
+                print_vertex(row)
+            elif row.type == "edge":
+                print "Edge[{}{}{}]".format(Fore.BLUE, row.label, Style.RESET_ALL), row.properties
+        else:
             print row.value
-        elif row.type == "vertex":
-            print_vertex(row)
-        elif row.type == "edge":
-            print "Edge[{}{}{}]".format(Fore.BLUE, row.label, Style.RESET_ALL), row.properties
 
 
 def main():
     session = Cluster().connect()
-    session.default_graph_options.graph_name = sys.argv[1]
+    graph = sys.argv[1]
+    session.default_graph_options.graph_name = graph
     accum = None
     eof = None
 
@@ -76,8 +79,15 @@ def main():
 
 
         try:
-            result = session.execute_graph(input)
-            # readline.add_history(input)
+            stmt = SimpleGraphStatement(input)
+
+            if input.startswith("a"):
+                print Fore.GREEN + "Spark Graph Traversal Enabled, this may take a while..."
+                stmt.options.graph_source = "a"
+                stmt.options.graph_alias = "a"
+
+            result = session.execute_graph(stmt)
+
         except Exception as e:
             print e
             continue
@@ -86,7 +96,8 @@ def main():
             print_result_set(result)
         else:
             try:
-                print result
+
+                print "Unknown result", type(result), result
             except Exception as e:
                 print e
 
