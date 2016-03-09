@@ -6,9 +6,26 @@ vertex = Keyword('vertex', caseless=True)
 edge = Keyword('edge', caseless=True)
 
 index = Keyword('index', caseless=True)
+label = Keyword('label', caseless=True)
+on_ = Keyword("on", caseless=True)
 
-ident = alphas + Word(alphas, alphanums + "_")
+ident =  Word(alphas, alphanums + "_")
 
+create_vertex = create + vertex + Optional(label) + ident('label')
+
+
+class CreateVertex(object):
+    label = None
+
+    def __init__(self, label):
+        self.label = label
+
+
+class CreateEdge(object):
+    label = None
+
+    def __init__(self, label):
+        self.label = label
 
 
 def parse_line(s):

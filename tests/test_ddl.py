@@ -1,15 +1,18 @@
 from pytest import fixture
-from cdm.ddl import parse_line
+from cdm.ddl import parse_line, create_vertex
 
 def test_create_property():
     result = parse_line("CREATE PROPERTY name text")
 
 
 def test_create_vertex_label():
-    result = parse_line("CREATE vertex movie")
+    cmd = "CREATE vertex movie"
+    result = create_vertex.parseString(cmd)
+    import ipdb; ipdb.set_trace()
+    result = parse_line(cmd)
     result2 = parse_line("CREATE vertex label movie")
 
-def test_create_vertex_label():
+def test_create_edge_label():
     result = parse_line("CREATE edge rated")
     result2 = parse_line("CREATE edge label rated")
 
