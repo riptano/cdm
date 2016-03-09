@@ -61,7 +61,7 @@ def update_datasets():
 def normalize_dataset_name(dataset):
     return dataset.replace("-", "_")
 
-def get_session(dataset, graph=False):
+def get_session(dataset, graph=False, host=None):
     keyspace = normalize_dataset_name(dataset)
     if graph:
         try:
@@ -72,7 +72,7 @@ def get_session(dataset, graph=False):
         except:
             pass
 
-    session = connect(keyspace=keyspace)
+    session = connect(host=host, keyspace=keyspace)
 
     print "Creating keyspace"
     if keyspace not in session.cluster.metadata.keyspaces:
@@ -100,7 +100,8 @@ def install(dataset,
             version="master",
             install_cassandra=True,
             install_graph=False,
-            install_search=False):
+            install_search=False,
+            host=None):
 
     if dataset == ".":
         path = "."
@@ -120,7 +121,8 @@ def install(dataset,
         sys.path.append(path) # so imports work
 
     print "Connecting"
-    session = get_session(dataset, install_graph)
+
+    session = get_session(dataset, install_graph, host=host)
     # load the schema
 
     if not os.path.exists(cache_dir):
@@ -178,7 +180,6 @@ def download_dataset(dataset_name, dataset_url):
 # returns a new session
 def connect(host="localhost", port=9042, keyspace=None, graph=False):
     setup([host], keyspace)
-    # session = Cluster([host]).connect()
     return get_db_session()
 
 def create_keyspace():

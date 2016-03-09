@@ -48,10 +48,12 @@ def main():
         if len(tmp) == 1:
             tmp.append("master")
 
+        host = arguments.get("--host") or "localhost"
         return install(tmp[0], tmp[1],
                        install_cassandra=not arguments['--nocassandra'],
                        install_graph=arguments['--graph'],
-                       install_search=arguments['--search'])
+                       install_search=arguments['--search'],
+                       host=host)
 
 
 
