@@ -1,11 +1,16 @@
-from pyparsing import Word, alphas, Keyword, Optional, LineStart, alphanums, oneOf
 from collections import namedtuple
+
+from pyparsing import Word, alphas, Keyword, Optional, LineStart, \
+                    alphanums, oneOf, Literal, CaselessLiteral, OneOrMore, delimitedList
 
 
 CreateVertex = namedtuple("CreateVertex", ["label"])
 CreateEdge = namedtuple("CreatedEdge", ["label"])
 CreateProperty = namedtuple("CreateProperty", ["name", "type"])
-CreateIndex = namedtuple("CreateIndex", ["fields", "type"])
+
+# element is either vertex or edge
+CreateIndex = namedtuple("CreateIndex", ["element", "label", "fields", "type"])
+
 
 create = Keyword('create', caseless=True)
 property = Keyword('property', caseless=True)
@@ -14,9 +19,15 @@ edge = Keyword('edge', caseless=True)
 
 index = Keyword('index', caseless=True)
 label = Keyword('label', caseless=True)
-on_ = Keyword("on", caseless=True)
+on_ = Keyword("on", caseless=True).suppress()
+
 materialized = Keyword("materialized", caseless=True)
 fulltext = Keyword("fulltext", caseless=True)
+
+index_type = materialized | fulltext
+
+lparen = Literal("(").suppress()
+rparen = Literal(")").suppress()
 
 ident =  Word(alphas, alphanums + "_")
 
@@ -33,9 +44,19 @@ create_edge = (create + edge + Optional(label) + ident('label')).\
 create_property = (create + property + ident("name") + typename("type")).\
                 setParseAction(lambda s, l, t: CreateProperty(name=t.name, type=t.type))
 
-# create_index = (create + index + Optional(ident) + )
+def f(s,l,t):
+    return CreateIndex(element=t.element,
+                       label=t.label,
+                       fields=t.fields,
+                       type=t.type)
 
-statement = create_vertex | create_edge | create_property
+
+create_index = (create + (vertex | edge)("element") + index+ Optional(ident)('index_name') +
+                on_ + ident('') +
+                lparen + delimitedList(ident, ",")('fields') + rparen + index_type('type')
+                ).setParseAction(f)
+
+statement = create_vertex | create_edge | create_property | create_index
 
 
 def parse_line(s):

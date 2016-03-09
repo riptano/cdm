@@ -1,5 +1,6 @@
 from pytest import fixture
-from cdm.ddl import parse_line, create_vertex, CreateVertex, \
+from cdm.ddl import parse_line, create_vertex, create_index,\
+                    CreateVertex, \
                     CreateEdge, CreateProperty, CreateIndex
 
 
@@ -27,8 +28,11 @@ def test_create_property():
     assert isinstance(result, CreateProperty)
 
 
-# def test_create_index_fulltext():
-#     result = parse_line("CREATE INDEX search on movie(title) FULLTEXT")
+def test_create_index_fulltext():
+    s = "CREATE VERTEX INDEX search on movie(title) FULLTEXT"
+    result = create_index.parseString(s)
+
+#     result = parse_line()
 #     assert isinstance(result, CreateIndex)
 #
 # def test_create_index_materialize():
