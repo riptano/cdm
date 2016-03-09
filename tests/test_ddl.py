@@ -1,5 +1,6 @@
 from pytest import fixture
-from cdm.ddl import parse_line, create_vertex, CreateVertex, CreateEdge, CreateProperty
+from cdm.ddl import parse_line, create_vertex, CreateVertex, \
+                    CreateEdge, CreateProperty, CreateIndex
 
 
 def test_create_vertex_label():
@@ -18,16 +19,17 @@ def test_create_edge_label():
     result = parse_line("CREATE edge rated")
     assert isinstance(result, CreateEdge)
     assert result.label == "rated"
-
     result2 = parse_line("CREATE edge label rated")
 
 
 def test_create_property():
     result = parse_line("CREATE PROPERTY name text")
+    assert isinstance(result, CreateProperty)
 
 
 # def test_create_index_fulltext():
 #     result = parse_line("CREATE INDEX search on movie(title) FULLTEXT")
+#     assert isinstance(result, CreateIndex)
 #
 # def test_create_index_materialize():
 #     result = parse_line("CREATE INDEX movie_title_idx ON movie(title) SEARCH");
