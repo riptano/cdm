@@ -25,9 +25,11 @@ def context():
             os.mkdir("./cache")
         session.set_keyspace(ks)
 
-    return Context(dataset="test",
+    return Context(root=os.getcwd(),
+                    dataset="test",
                    session=session,
-                   cache_dir="./cache")
+                   cache_dir="./cache",
+                   )
 
 
 
