@@ -67,7 +67,7 @@ def main():
     print "Gremlin REPL, use heredocs for multiline ex:<<EOF"
 
     while True:
-        prompt = "gremlin> " if eof is None else "gremlin (cont)> "
+        prompt = "gremlin [{}/{}]> ".format(host[0], graph) if eof is None else "gremlin (cont)> "
         input = raw_input(prompt)
         output_time = False
         start_time = time.time()
