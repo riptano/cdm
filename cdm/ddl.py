@@ -1,4 +1,11 @@
-from pyparsing import Word, alphas, Keyword, Optional, LineStart, alphanums
+from pyparsing import Word, alphas, Keyword, Optional, LineStart, alphanums, oneOf
+from collections import namedtuple
+
+
+CreateVertex = namedtuple("CreateVertex", ["label"])
+CreateEdge = namedtuple("CreatedEdge", ["label"])
+CreateProperty = namedtuple("CreateProperty", ["name", "type"])
+
 
 create = Keyword('create', caseless=True)
 property = Keyword('property', caseless=True)
@@ -11,21 +18,21 @@ on_ = Keyword("on", caseless=True)
 
 ident =  Word(alphas, alphanums + "_")
 
-create_vertex = create + vertex + Optional(label) + ident('label')
+typename = oneOf("""ascii bigint blob boolean counter date
+                  decimal double float inet int smallint text time
+                  timestamp timeuuid tinyint uuid varchar varint""")
+
+create_vertex = (create + vertex + Optional(label) + ident('label')).\
+                setParseAction(lambda s, l, t: CreateVertex(label=t.label) )
+
+create_edge = (create + edge + Optional(label) + ident('label')).\
+                setParseAction(lambda s, l, t: CreateEdge(label=t.label))
+
+create_property = (create + property + ident("name") + typename("type")).\
+                setParseAction(lambda s, l, t: CreateProperty(name=t.name, type=t.type))
 
 
-class CreateVertex(object):
-    label = None
-
-    def __init__(self, label):
-        self.label = label
-
-
-class CreateEdge(object):
-    label = None
-
-    def __init__(self, label):
-        self.label = label
+statement = create_vertex | create_edge | create_property
 
 
 def parse_line(s):
@@ -34,5 +41,6 @@ def parse_line(s):
     :param s:
     :return:
     """
+    return statement.parseString(s)[0]
 
 
