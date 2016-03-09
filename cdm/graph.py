@@ -1,3 +1,10 @@
+"""graph - DSE graph REPL
+
+Usage:
+    graph [--host=<host>] <keyspace>
+
+
+"""
 from dse.cluster import Cluster
 from dse.graph import SimpleGraphStatement
 import code
@@ -9,6 +16,7 @@ import readline
 init()
 import time
 histfile = os.path.join(os.path.expanduser("~"), ".dsegraphhist")
+from docopt import docopt
 
 try:
     readline.read_history_file(histfile)
@@ -41,10 +49,18 @@ def print_result_set(result):
             print row.value
 
 
+
 def main():
-    session = Cluster().connect()
-    graph = sys.argv[1]
+    arguments = docopt(__doc__)
+
+    host = [arguments['--host']] if arguments["--host"] else ["localhost"]
+
+    session = Cluster(host).connect()
+
+    graph = arguments['<keyspace>']
     session.default_graph_options.graph_name = graph
+    print Fore.GREEN + "Connected to {}/{}".format(host[0], graph) + Style.RESET_ALL
+
     accum = None
     eof = None
 
