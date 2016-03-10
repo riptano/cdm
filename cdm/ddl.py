@@ -55,7 +55,8 @@ class CreateVertex(ParsedCommand):
 
 
 class CreateEdge(ParsedCommand):
-    label = None
+    def to_string(self):
+        return self.schema + "schema.buildEdgeLabel('{}').add()".format(self.label)
 
 
 class CreateEdge(ParsedCommand):
@@ -150,9 +151,11 @@ def f(s,l,t):
                        type=t.type)
 
 
-create_index = (create + (vertex | edge)("element") + index+ Optional(ident)('index_name') +
-                on_ + ident('') +
-                lparen + delimitedList(ident, ",")('fields') + rparen + index_type('type')
+create_index = (create + (vertex | edge)("element") + index + \
+                    Optional(ident)('index_name') +
+                    on_ + ident('') +
+                    lparen + delimitedList(ident, ",")('fields') + rparen +
+                    index_type('type')
                 ).setParseAction(f)
 
 statement = create_graph | use_graph | \

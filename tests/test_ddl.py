@@ -18,7 +18,7 @@ def test_create_vertex_label():
     result = parse_line(cmd)
     assert isinstance(result, CreateVertex)
     assert result.label == "movie"
-    
+
     assert "buildVertexLabel" in str(result)
     assert "movie" in str(result)
 
@@ -30,6 +30,7 @@ def test_create_edge_label():
     assert isinstance(result, CreateEdge)
     assert result.label == "rated"
     result2 = parse_line("CREATE edge label rated")
+    assert isinstance(result2, CreateEdge)
 
 
 def test_create_property():
