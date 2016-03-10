@@ -170,7 +170,7 @@ def vi(s,l,t):
                        type=t.type)
 
 
-create_vertex_index = (create +  index_type('type') + index + \
+create_vertex_index = (create + index_type('type') + index + \
                         ident('index_name') +
                         on_ + vertex.suppress() + ident('label') +
                         lparen + delimitedList(ident, ",")('fields') + rparen).\
