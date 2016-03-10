@@ -8,6 +8,16 @@ class ParsedCommand(object):
         for k, v in kwargs.iteritems():
             self.__setattr__(k, v)
 
+    def to_string(self):
+        raise NotImplementedError()
+
+    def __str__(self):
+        return self.to_string()
+
+    def execute(self, session):
+        s = str(self)
+        return session.execute_graph(s)
+
 
 class CreateVertex(ParsedCommand):
     label = None
@@ -33,11 +43,17 @@ class CreateIndex(ParsedCommand):
     fields = None
     type = None
 
+class CreateGraph(ParsedCommand):
+    name = None
+    def to_string(self):
+        return """system.createGraph('{}').build()""".format(self.name)
+
 
 create = Keyword('create', caseless=True)
 property = Keyword('property', caseless=True)
 vertex = Keyword('vertex', caseless=True)
 edge = Keyword('edge', caseless=True)
+graph = Keyword('graph', caseless=True)
 
 index = Keyword('index', caseless=True)
 label = Keyword('label', caseless=True)
@@ -56,6 +72,9 @@ ident =  Word(alphas, alphanums + "_")
 typename = oneOf("""ascii bigint blob boolean counter date
                   decimal double float inet int smallint text time
                   timestamp timeuuid tinyint uuid varchar varint""")
+
+create_graph = (create + graph + ident('name')).\
+                setParseAction(lambda s,l,t: CreateGraph(name=t.name))
 
 create_vertex = (create + vertex + Optional(label) + ident('label')).\
                 setParseAction(lambda s, l, t: CreateVertex(label=t.label) )
@@ -78,7 +97,9 @@ create_index = (create + (vertex | edge)("element") + index+ Optional(ident)('in
                 lparen + delimitedList(ident, ",")('fields') + rparen + index_type('type')
                 ).setParseAction(f)
 
-statement = create_vertex | create_edge | create_property | create_index
+statement = create_graph | create_vertex | \
+            create_edge | create_property | \
+            create_index
 
 
 def parse_line(s):

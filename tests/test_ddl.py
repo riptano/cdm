@@ -1,8 +1,14 @@
 from pytest import fixture
 from cdm.ddl import parse_line, create_vertex, create_index,\
                     CreateVertex, \
-                    CreateEdge, CreateProperty, CreateIndex
+                    CreateEdge, CreateProperty, CreateIndex, CreateGraph
 
+
+def test_create_graph():
+    s = "CREATE GRAPH jon"
+    parsed = parse_line(s)
+    assert isinstance(parsed, CreateGraph)
+    assert "system.createGraph('jon').build()" in str(parsed)
 
 def test_create_vertex_label():
     cmd = "CREATE vertex movie"
