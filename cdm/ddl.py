@@ -3,13 +3,35 @@ from collections import namedtuple
 from pyparsing import Word, alphas, Keyword, Optional, LineStart, \
                     alphanums, oneOf, Literal, CaselessLiteral, OneOrMore, delimitedList
 
+class ParsedCommand(object):
+    def __init__(self, **kwargs):
+        for k, v in kwargs.iteritems():
+            self.__setattr__(k, v)
 
-CreateVertex = namedtuple("CreateVertex", ["label"])
-CreateEdge = namedtuple("CreatedEdge", ["label"])
-CreateProperty = namedtuple("CreateProperty", ["name", "type"])
 
-# element is either vertex or edge
-CreateIndex = namedtuple("CreateIndex", ["element", "label", "fields", "type"])
+class CreateVertex(ParsedCommand):
+    label = None
+
+
+class CreateEdge(ParsedCommand):
+    label = None
+
+
+class CreateEdge(ParsedCommand):
+    label = None
+
+
+class CreateProperty(ParsedCommand):
+    name = None
+    type = None
+
+
+class CreateIndex(ParsedCommand):
+    # element is either vertex or edge
+    element = None
+    label = None
+    fields = None
+    type = None
 
 
 create = Keyword('create', caseless=True)
