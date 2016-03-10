@@ -52,6 +52,8 @@ graph.schema().vertexLabel("swid").buildVertexIndex("search").search().byPropert
 def test_create_index_fulltext():
     s = "CREATE materialized INDEX movie_title_idx ON VERTEX movie(title )"
     result = create_vertex_index.parseString(s)
+    s = "CREATE secondary INDEX movie_title_idx ON VERTEX movie(title )"
+    result = create_vertex_index.parseString(s)
 
 
 #     result = parse_line()
