@@ -1,7 +1,7 @@
 """graph - DSE graph REPL
 
 Usage:
-    graph [--host=<host>] <keyspace>
+    graph [--host=<host>] [<keyspace>]
 
 
 """
@@ -13,6 +13,9 @@ from cassandra.cluster import ResultSet
 import os
 from colorama import Fore, Style, init
 import readline
+
+from cdm.ddl import parse_line
+
 init()
 import time
 histfile = os.path.join(os.path.expanduser("~"), ".dsegraphhist")
@@ -67,6 +70,7 @@ def main():
     print "Gremlin REPL, use heredocs for multiline ex:<<EOF"
 
     while True:
+        graph = session.default_graph_options.graph_name
         prompt = "gremlin [{}/{}]> ".format(host[0], graph) if eof is None else "gremlin (cont)> "
         input = raw_input(prompt)
         output_time = False
@@ -97,13 +101,23 @@ def main():
 
         total_time = None
         try:
+
+            try:
+                input = parse_line(input).execute(session)
+                print "Rewritten to {}".format(input)
+                continue
+            except:
+                pass
+
             stmt = SimpleGraphStatement(input)
 
             if input.startswith("a"):
                 print Fore.GREEN + "Spark Graph Traversal Enabled, this may take a while..." + Style.RESET_ALL
                 stmt.options.graph_source = "a"
                 stmt.options.graph_alias = "a"
+
             start = time.time()
+
             result = session.execute_graph(stmt)
             total_time = time.time() - start
 

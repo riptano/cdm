@@ -3,6 +3,8 @@ from collections import namedtuple
 from pyparsing import Word, alphas, Keyword, Optional, LineStart, \
                     alphanums, oneOf, Literal, CaselessLiteral, OneOrMore, delimitedList
 
+class Noop(Exception): pass
+
 class ParsedCommand(object):
     def __init__(self, **kwargs):
         for k, v in kwargs.iteritems():
@@ -16,7 +18,21 @@ class ParsedCommand(object):
 
     def execute(self, session):
         s = str(self)
-        return session.execute_graph(s)
+
+        try:
+            self._pre_execute(session)
+        except Noop:
+            pass
+
+        tmp = session.execute_graph(s)
+        self._post_execute(session)
+        return tmp
+
+    def _pre_execute(self, session):
+        pass
+
+    def _post_execute(self, session):
+        pass
 
 
 class CreateVertex(ParsedCommand):
@@ -48,6 +64,22 @@ class CreateGraph(ParsedCommand):
     def to_string(self):
         return """system.createGraph('{}').build()""".format(self.name)
 
+    def _pre_execute(self, session):
+        self.old_name = session.default_graph_options.graph_name
+        session.default_graph_options.graph_name = None
+
+    def _post_execute(self, session):
+        session.default_graph_options.graph_name = self.old_name
+
+
+class UseGraph(ParsedCommand):
+    name = None
+    def to_string(self):
+        return ""
+
+    def _pre_execute(self, session):
+        session.default_graph_options.graph_name = self.name
+        raise Noop()
 
 create = Keyword('create', caseless=True)
 property = Keyword('property', caseless=True)
@@ -57,7 +89,9 @@ graph = Keyword('graph', caseless=True)
 
 index = Keyword('index', caseless=True)
 label = Keyword('label', caseless=True)
+
 on_ = Keyword("on", caseless=True).suppress()
+use = Keyword('use', caseless=True).suppress()
 
 materialized = Keyword("materialized", caseless=True)
 fulltext = Keyword("fulltext", caseless=True)
@@ -75,6 +109,10 @@ typename = oneOf("""ascii bigint blob boolean counter date
 
 create_graph = (create + graph + ident('name')).\
                 setParseAction(lambda s,l,t: CreateGraph(name=t.name))
+
+use_graph = (use + ident('name')).\
+                setParseAction(lambda s,l,t: UseGraph(name=t.name))
+
 
 create_vertex = (create + vertex + Optional(label) + ident('label')).\
                 setParseAction(lambda s, l, t: CreateVertex(label=t.label) )
@@ -97,7 +135,8 @@ create_index = (create + (vertex | edge)("element") + index+ Optional(ident)('in
                 lparen + delimitedList(ident, ",")('fields') + rparen + index_type('type')
                 ).setParseAction(f)
 
-statement = create_graph | create_vertex | \
+statement = create_graph | use_graph | \
+            create_vertex | \
             create_edge | create_property | \
             create_index
 
