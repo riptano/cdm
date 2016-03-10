@@ -4,8 +4,14 @@ from pyparsing import Word, alphas, Keyword, Optional, LineStart, \
                     alphanums, oneOf, Literal, CaselessLiteral, OneOrMore, delimitedList
 
 class Noop(Exception): pass
-
+"""
+schema = graph.schema()
+def id = schema.buildPropertyKey('id', Integer.class).add()
+schema.buildVertexLabel('author').add()
+schema.buildEdgeLabel('authored').add()
+"""
 class ParsedCommand(object):
+
     def __init__(self, **kwargs):
         for k, v in kwargs.iteritems():
             self.__setattr__(k, v)
@@ -36,9 +42,16 @@ class ParsedCommand(object):
     def post_execute(self, session):
         pass
 
+    @property
+    def schema(self):
+        return "schema = graph.schema()\n"
 
+
+# schema.buildVertexLabel('author').add()
 class CreateVertex(ParsedCommand):
     label = None
+    def to_string(self):
+        return self.schema + "schema.buildVertexLabel('{}').add()".format(self.label)
 
 
 class CreateEdge(ParsedCommand):

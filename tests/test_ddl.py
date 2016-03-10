@@ -18,6 +18,9 @@ def test_create_vertex_label():
     result = parse_line(cmd)
     assert isinstance(result, CreateVertex)
     assert result.label == "movie"
+    
+    assert "buildVertexLabel" in str(result)
+    assert "movie" in str(result)
 
     result2 = parse_line("CREATE vertex label movie")
     assert isinstance(result, CreateVertex)
