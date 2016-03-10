@@ -14,7 +14,7 @@ import os
 from colorama import Fore, Style, init
 import readline
 
-from cdm.ddl import parse_line
+from cdm.ddl import parse_line, ParseError
 
 init()
 import time
@@ -52,7 +52,15 @@ def print_result_set(result):
         else:
             print row.value
 
-
+def print_help():
+    print """Enhanded DSE Graph REPL
+create graph <graph>
+use <graph>
+create vertex [label]
+create edge [label]
+create property [name] [type]
+create property [
+    """
 
 def main():
     arguments = docopt(__doc__)
@@ -99,16 +107,23 @@ def main():
         if input == "%schema":
             continue
 
+        if input == "help":
+            print_help()
+            continue
 
         total_time = None
         try:
 
             try:
-                input = parse_line(input).execute(session)
-                print_result_set(input)
+                parsed = parse_line(input)
+                result = parsed.execute(session)
+                print_result_set(result)
                 continue
-            except:
+            except ParseError as e:
                 pass
+            except Exception as e:
+                print e
+                continue
 
             stmt = SimpleGraphStatement(input)
 

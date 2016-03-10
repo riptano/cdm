@@ -33,8 +33,11 @@ def test_create_edge_label():
     assert isinstance(result2, CreateEdge)
 
 
+
 def test_create_property():
     result = parse_line("CREATE PROPERTY name text")
+    assert isinstance(result, CreateProperty)
+    result = parse_line("CREATE PROPERTY name TEXT")
     assert isinstance(result, CreateProperty)
 
 

@@ -4,12 +4,22 @@ from pyparsing import Word, alphas, Keyword, Optional, LineStart, \
                     alphanums, oneOf, Literal, CaselessLiteral, OneOrMore, delimitedList
 
 class Noop(Exception): pass
+class ParseError(Exception): pass
+
 """
 schema = graph.schema()
 def id = schema.buildPropertyKey('id', Integer.class).add()
 schema.buildVertexLabel('author').add()
 schema.buildEdgeLabel('authored').add()
 """
+
+import logging
+
+type_mapping = {
+    "int" : "Integer.class",
+    "text": "String.class",
+}
+
 class ParsedCommand(object):
 
     def __init__(self, **kwargs):
@@ -25,6 +35,8 @@ class ParsedCommand(object):
     # don't mess with this on a subclass, look at pre_execute and post_execute
     def execute(self, session):
         s = str(self)
+        logging.info(s)
+        print s
         tmp = None
         try:
             self.pre_execute(session)
@@ -55,17 +67,22 @@ class CreateVertex(ParsedCommand):
 
 
 class CreateEdge(ParsedCommand):
-    def to_string(self):
-        return self.schema + "schema.buildEdgeLabel('{}').add()".format(self.label)
-
-
-class CreateEdge(ParsedCommand):
     label = None
+    def to_string(self):
+        tmp = self.schema + "schema.buildEdgeLabel('{}').add()".format(self.label)
+        return tmp
 
 
+# def id = schema.buildPropertyKey('id', Integer.class).add()
 class CreateProperty(ParsedCommand):
     name = None
     type = None
+    def to_string(self):
+        t = self.type.lower()
+        if t in type_mapping:
+            t = type_mapping[t]
+
+        return self.schema + "schema.buildPropertyKey('{}', {}).add()".format(self.name, t)
 
 
 class CreateIndex(ParsedCommand):
@@ -126,7 +143,7 @@ ident =  Word(alphas, alphanums + "_")
 
 typename = oneOf("""ascii bigint blob boolean counter date
                   decimal double float inet int smallint text time
-                  timestamp timeuuid tinyint uuid varchar varint""")
+                  timestamp timeuuid tinyint uuid varchar varint""", caseless=True)
 
 create_graph = (create + graph + ident('name')).\
                 setParseAction(lambda s,l,t: CreateGraph(name=t.name))
@@ -170,6 +187,9 @@ def parse_line(s):
     :param s:
     :return:
     """
-    return statement.parseString(s)[0]
+    try:
+        return statement.parseString(s)[0]
+    except:
+        raise ParseError()
 
 
