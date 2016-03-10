@@ -87,8 +87,14 @@ class CreateProperty(ParsedCommand):
 
 class CreateVertexIndex(ParsedCommand):
     label = None
+    name = None
     fields = None
     type = None
+
+    def to_string(self):
+        s = """graph.schema().vertexLabel("{}").buildVertexIndex("{}").{}().byPropertyKey("{}").add()""".format(self.label, self.name, self.type, self.fields[0])
+        return s
+
 
 class CreateGraph(ParsedCommand):
     name = None
@@ -163,6 +169,7 @@ create_property = (create + property + ident("name") + typename("type")).\
 
 def vi(s,l,t):
     return CreateVertexIndex(label=t.label,
+                             name=t.index_name,
                              fields=t.fields,
                              type=t.type)
 

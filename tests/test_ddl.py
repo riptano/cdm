@@ -57,8 +57,11 @@ def test_create_index_fulltext():
     result = create_vertex_index.parseString(s)[0]
     assert result.type == "materialized"
     assert result.label == 'movie'
-    assert result.label == 'movie'
+    assert result.name == 'movie_title_idx'
 
+    groovy = str(result)
+
+    result = parse_line(s)
     s = "CREATE secondary INDEX movie_title_idx ON VERTEX movie(title )"
     result = create_vertex_index.parseString(s)[0]
     assert result.type == "secondary"
@@ -68,7 +71,7 @@ def test_create_index_fulltext():
     assert result.type == "search"
 
 
-#     result = parse_line()
+    result = parse_line(s)
 #     assert isinstance(result, CreateIndex)
 #
 # def test_create_index_materialize():
