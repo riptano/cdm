@@ -60,6 +60,8 @@ use <graph>
 create vertex [label]
 create edge [label]
 create property [name] [type]
+CREATE [materialized|secondary|search] INDEX [name] ON VERTEX [label]([field])
+
     """
 
 def main():
