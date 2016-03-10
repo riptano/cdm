@@ -131,10 +131,12 @@ label = Keyword('label', caseless=True)
 on_ = Keyword("on", caseless=True).suppress()
 use = Keyword('use', caseless=True).suppress()
 
+# index types
 materialized = Keyword("materialized", caseless=True)
-fulltext = Keyword("fulltext", caseless=True)
+fulltext = Keyword("search", caseless=True)
+secondary = Keyword("secondary", caseless=True)
 
-index_type = materialized | fulltext
+index_type = materialized | fulltext | secondary
 
 lparen = Literal("(").suppress()
 rparen = Literal(")").suppress()
@@ -161,24 +163,23 @@ create_edge = (create + edge + Optional(label) + ident('label')).\
 create_property = (create + property + ident("name") + typename("type")).\
                 setParseAction(lambda s, l, t: CreateProperty(name=t.name, type=t.type))
 
-def f(s,l,t):
+def vi(s,l,t):
     return CreateIndex(element=t.element,
                        label=t.label,
                        fields=t.fields,
                        type=t.type)
 
 
-create_index = (create + (vertex | edge)("element") + index + \
-                    Optional(ident)('index_name') +
-                    on_ + ident('') +
-                    lparen + delimitedList(ident, ",")('fields') + rparen +
-                    index_type('type')
-                ).setParseAction(f)
+create_vertex_index = (create +  index_type('type') + index + \
+                        ident('index_name') +
+                        on_ + vertex.suppress() + ident('label') +
+                        lparen + delimitedList(ident, ",")('fields') + rparen).\
+                       setParseAction(vi)
 
 statement = create_graph | use_graph | \
             create_vertex | \
             create_edge | create_property | \
-            create_index
+            create_vertex_index
 
 
 def parse_line(s):

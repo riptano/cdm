@@ -1,5 +1,5 @@
 from pytest import fixture
-from cdm.ddl import parse_line, create_vertex, create_index,\
+from cdm.ddl import parse_line, create_vertex, create_vertex_index,\
                     CreateVertex, \
                     CreateEdge, CreateProperty, CreateIndex, CreateGraph
 
@@ -41,9 +41,18 @@ def test_create_property():
     assert isinstance(result, CreateProperty)
 
 
+"""
+graph.schema().vertexLabel("ip").buildVertexIndex("ipById").materialized().byPropertyKey("id").add()
+Secondary
+graph.schema().vertexLabel("ip").buildVertexIndex("ipByCountry").secondary().byPropertyKey("country").add()
+Search
+graph.schema().vertexLabel("swid").buildVertexIndex("search").search().byPropertyKey("dob").add()
+"""
+
 def test_create_index_fulltext():
-    s = "CREATE VERTEX INDEX search on movie(title) FULLTEXT"
-    result = create_index.parseString(s)
+    s = "CREATE materialized INDEX movie_title_idx ON VERTEX movie(title )"
+    result = create_vertex_index.parseString(s)
+
 
 #     result = parse_line()
 #     assert isinstance(result, CreateIndex)
