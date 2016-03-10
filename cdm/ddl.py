@@ -16,22 +16,24 @@ class ParsedCommand(object):
     def __str__(self):
         return self.to_string()
 
+    # don't mess with this on a subclass, look at pre_execute and post_execute
     def execute(self, session):
         s = str(self)
         tmp = None
         try:
-            self._pre_execute(session)
+            self.pre_execute(session)
+            print "Command rewritten to {}".format(s)
             tmp = session.execute_graph(s)
         except Noop:
             pass
 
-        self._post_execute(session)
+        self.post_execute(session)
         return tmp
 
-    def _pre_execute(self, session):
+    def pre_execute(self, session):
         pass
 
-    def _post_execute(self, session):
+    def post_execute(self, session):
         pass
 
 
@@ -64,12 +66,17 @@ class CreateGraph(ParsedCommand):
     def to_string(self):
         return """system.createGraph('{}').build()""".format(self.name)
 
-    def _pre_execute(self, session):
+    def pre_execute(self, session):
         self.old_name = session.default_graph_options.graph_name
         session.default_graph_options.graph_name = None
 
-    def _post_execute(self, session):
+    def post_execute(self, session):
+        print "{} graph created".format(self.name)
         session.default_graph_options.graph_name = self.old_name
+
+    def execute(self, session):
+        super(CreateGraph, self).execute(session)
+
 
 
 class UseGraph(ParsedCommand):
@@ -77,7 +84,7 @@ class UseGraph(ParsedCommand):
     def to_string(self):
         return ""
 
-    def _pre_execute(self, session):
+    def pre_execute(self, session):
         session.default_graph_options.graph_name = self.name
         raise Noop()
 
