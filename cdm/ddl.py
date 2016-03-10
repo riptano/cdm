@@ -18,13 +18,13 @@ class ParsedCommand(object):
 
     def execute(self, session):
         s = str(self)
-
+        tmp = None
         try:
             self._pre_execute(session)
+            tmp = session.execute_graph(s)
         except Noop:
             pass
 
-        tmp = session.execute_graph(s)
         self._post_execute(session)
         return tmp
 

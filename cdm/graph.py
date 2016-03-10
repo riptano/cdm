@@ -42,6 +42,7 @@ def print_vertex(row):
     print "Vertex[{}{}{}]".format(Fore.BLUE, row.label, Style.RESET_ALL), tmp
 
 def print_result_set(result):
+    if result is None: return
     for row in result:
         if hasattr(row, 'type'):
             if row.type == "vertex":
@@ -104,7 +105,7 @@ def main():
 
             try:
                 input = parse_line(input).execute(session)
-                print "Rewritten to {}".format(input)
+                print_result_set(input)
                 continue
             except:
                 pass
