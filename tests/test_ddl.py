@@ -1,7 +1,10 @@
 from pytest import fixture
-from cdm.ddl import parse_line, create_vertex, create_vertex_index,\
+from cdm.ddl import parse_line, create_vertex, \
+                    create_vertex_index,\
                     CreateVertex, \
-                    CreateEdge, CreateProperty, CreateIndex, CreateGraph
+                    CreateEdge, CreateProperty, \
+                    CreateVertexIndex, \
+                    CreateGraph
 
 
 def test_create_graph():
@@ -53,10 +56,16 @@ def test_create_index_fulltext():
     s = "CREATE materialized INDEX movie_title_idx ON VERTEX movie(title )"
     result = create_vertex_index.parseString(s)[0]
     assert result.type == "materialized"
+    assert result.label == 'movie'
+    assert result.label == 'movie'
 
     s = "CREATE secondary INDEX movie_title_idx ON VERTEX movie(title )"
     result = create_vertex_index.parseString(s)[0]
     assert result.type == "secondary"
+
+    s = "CREATE search INDEX movie_title_idx ON VERTEX movie(title )"
+    result = create_vertex_index.parseString(s)[0]
+    assert result.type == "search"
 
 
 #     result = parse_line()

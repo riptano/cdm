@@ -85,9 +85,7 @@ class CreateProperty(ParsedCommand):
         return self.schema + "schema.buildPropertyKey('{}', {}).add()".format(self.name, t)
 
 
-class CreateIndex(ParsedCommand):
-    # element is either vertex or edge
-    element = None
+class CreateVertexIndex(ParsedCommand):
     label = None
     fields = None
     type = None
@@ -164,10 +162,9 @@ create_property = (create + property + ident("name") + typename("type")).\
                 setParseAction(lambda s, l, t: CreateProperty(name=t.name, type=t.type))
 
 def vi(s,l,t):
-    return CreateIndex(element=t.element,
-                       label=t.label,
-                       fields=t.fields,
-                       type=t.type)
+    return CreateVertexIndex(label=t.label,
+                             fields=t.fields,
+                             type=t.type)
 
 
 create_vertex_index = (create + index_type('type') + index + \
