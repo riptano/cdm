@@ -54,12 +54,12 @@ def print_result_set(result):
 
 def print_help():
     print """Enhanded DSE Graph REPL
+
 create graph <graph>
 use <graph>
 create vertex [label]
 create edge [label]
 create property [name] [type]
-create property [
     """
 
 def main():
@@ -76,7 +76,7 @@ def main():
     accum = None
     eof = None
 
-    print "Gremlin REPL, use heredocs for multiline ex:<<EOF"
+    print "Gremlin REPL, use heredocs for multiline ex:<<EOF\n"
 
     while True:
         graph = session.default_graph_options.graph_name
