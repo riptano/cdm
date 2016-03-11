@@ -18,6 +18,7 @@ import imp
 import inspect
 from cdm.installer import Installer
 import sys
+from distutils.spawn import find_executable
 
 DATASETS_URL = "https://raw.githubusercontent.com/cassandra-data-manager/cdm/master/datasets.yaml"
 
@@ -102,6 +103,20 @@ def install(dataset,
             install_graph=False,
             install_search=False,
             host=None):
+
+    # check for cqlsh
+    if not find_executable("cqlsh"):
+        print "cqlsh could not be found.  Please add to your path."
+        sys.exit(1)
+        
+    if install_graph:
+        try:
+            import dse
+        except:
+            print "--graph supplied but python dse module not installed."
+            sys.exit(1)
+
+    # check for dse module
 
     if dataset == ".":
         path = "."

@@ -33,7 +33,9 @@ class Installer(object):
     def install_schema(self):
         # do not override
         self.context.feedback("Applying schema {}".format(self.schema))
-        command = "cqlsh -k {} -f {} ".format(self.keyspace, self.schema)
+
+        host = self.context.session.hosts[0].address
+        command = "cqlsh -k {} -f {} {}".format(self.keyspace, self.schema, host)
         subprocess.call(command, shell=True)
 
     def install_cassandra(self):
