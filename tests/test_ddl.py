@@ -13,6 +13,12 @@ def test_create_graph():
     assert isinstance(parsed, CreateGraph)
     assert "system.createGraph('jon').build()" in str(parsed)
 
+def test_show_graphs():
+    s = "show graphs"
+    parsed = parse_line(s)
+    assert isinstance(parsed, CreateGraph)
+    assert "system.createGraph('jon').build()" in str(parsed)
+
 def test_create_vertex_label():
     cmd = "CREATE vertex movie"
     result = create_vertex.parseString(cmd)[0]

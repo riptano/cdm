@@ -21,7 +21,7 @@ type_mapping = {
 }
 
 class ParsedCommand(object):
-
+    result = None
     def __init__(self, **kwargs):
         for k, v in kwargs.iteritems():
             self.__setattr__(k, v)
@@ -41,6 +41,7 @@ class ParsedCommand(object):
             self.pre_execute(session)
             print Fore.GREEN + "Command rewritten to {}".format(s) + Style.RESET_ALL
             tmp = session.execute_graph(s)
+            self.result = tmp
         except Noop:
             pass
 
@@ -57,6 +58,20 @@ class ParsedCommand(object):
     def schema(self):
         return "schema = graph.schema()\n"
 
+
+class ShowGraphs(ParsedCommand):
+    def to_string(self):
+        return "system.graphs"
+
+    def post_execute(self, session):
+        print "Available graphs: ",
+        i = 0
+        for graph in self.result:
+            print graph,
+            i += 1
+            if i % 4 == 0:
+                print
+        print
 
 # schema.buildVertexLabel('author').add()
 class CreateVertex(ParsedCommand):
@@ -119,6 +134,7 @@ class UseGraph(ParsedCommand):
         return ""
 
     def pre_execute(self, session):
+
         if self.name not in session.cluster.metadata.keyspaces:
             print "Graph {}{}{} not found".format(Fore.RED, self.name, Style.RESET_ALL)
         else:
@@ -130,6 +146,8 @@ property = Keyword('property', caseless=True)
 vertex = Keyword('vertex', caseless=True)
 edge = Keyword('edge', caseless=True)
 graph = Keyword('graph', caseless=True)
+graphs = Keyword('graphs', caseless=True)
+show = Keyword('show', caseless=True)
 
 index = Keyword('index', caseless=True)
 label = Keyword('label', caseless=True)
@@ -157,6 +175,8 @@ typename = oneOf("""ascii bigint blob boolean counter date
 
 create_graph = (create + graph + ident('name')).\
                 setParseAction(lambda s,l,t: CreateGraph(name=t.name))
+
+show_graphs = (show + graphs).setParseAction(lambda s, l, t: ShowGraphs())
 
 use_graph = (use + ident('name')).\
                 setParseAction(lambda s,l,t: UseGraph(name=t.name))
@@ -187,7 +207,7 @@ create_vertex_index = (create + index_type('type') + index + \
 statement = create_graph | use_graph | \
             create_vertex | \
             create_edge | create_property | \
-            create_vertex_index
+            create_vertex_index | show_graphs
 
 
 def parse_line(s):
@@ -202,3 +222,12 @@ def parse_line(s):
         raise ParseError()
 
 
+def execute_statements(statements, session):
+    """
+    executes a list of graph statements, in order, against session
+    :param statements:
+    :param session:
+    :return:
+    """
+    for s in statements:
+        stmt = parse_line(s)
