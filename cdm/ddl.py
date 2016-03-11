@@ -1,5 +1,5 @@
 from collections import namedtuple
-
+from colorama import Fore, Style
 from pyparsing import Word, alphas, Keyword, Optional, LineStart, \
                     alphanums, oneOf, Literal, CaselessLiteral, OneOrMore, delimitedList
 
@@ -39,7 +39,7 @@ class ParsedCommand(object):
         tmp = None
         try:
             self.pre_execute(session)
-            print "Command rewritten to {}".format(s)
+            print Fore.GREEN + "Command rewritten to {}".format(s) + Style.RESET_ALL
             tmp = session.execute_graph(s)
         except Noop:
             pass
@@ -133,6 +133,8 @@ label = Keyword('label', caseless=True)
 
 on_ = Keyword("on", caseless=True).suppress()
 use = Keyword('use', caseless=True).suppress()
+describe = (Keyword("desc", caseless=True) |
+            Keyword("descibe", caseless=True)).suppress()
 
 # index types
 materialized = Keyword("materialized", caseless=True)

@@ -78,7 +78,7 @@ def main():
     accum = None
     eof = None
 
-    print "Gremlin REPL, use heredocs for multiline ex:<<EOF\n"
+    print "Gremlin REPL, use heredocs for multiline ex:<<EOF, help for help\n"
 
     while True:
         graph = session.default_graph_options.graph_name
