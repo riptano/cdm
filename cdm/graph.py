@@ -72,7 +72,7 @@ def main():
     session = Cluster(host).connect()
 
     graph = arguments['<keyspace>']
-    if graph not in session.cluster.metadata.keyspaces:
+    if graph and graph not in session.cluster.metadata.keyspaces:
         print "Graph {}{}{} not found".format(Fore.RED, graph, Style.RESET_ALL)
         sys.exit(1)
 
