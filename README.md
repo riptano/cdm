@@ -1,6 +1,6 @@
 # Cassandra Data Manager
 
-Tool for installing cassandra datasets.
+Tool for installing cassandra datasets.  This is not a bulk loader.  It is intended to be used as a tool for learning and demonstration purposes.
 
 This repository contains the cdm tool only.  Other repositories in this repo contain the actual datasets.
 
