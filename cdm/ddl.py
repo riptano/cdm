@@ -119,7 +119,10 @@ class UseGraph(ParsedCommand):
         return ""
 
     def pre_execute(self, session):
-        session.default_graph_options.graph_name = self.name
+        if self.name not in session.cluster.metadata.keyspaces:
+            print "Graph {}{}{} not found".format(Fore.RED, self.name, Style.RESET_ALL)
+        else:
+            session.default_graph_options.graph_name = self.name
         raise Noop()
 
 create = Keyword('create', caseless=True)
