@@ -108,7 +108,7 @@ def install(dataset,
     if not find_executable("cqlsh"):
         print "cqlsh could not be found.  Please add to your path."
         sys.exit(1)
-        
+
     if install_graph:
         try:
             import dse

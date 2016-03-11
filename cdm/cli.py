@@ -18,6 +18,7 @@ import sys
 sys.path.append("")
 import os
 import os.path
+from ConfigParser import SafeConfigParser
 
 # 3rd party
 
@@ -48,7 +49,17 @@ def main():
         if len(tmp) == 1:
             tmp.append("master")
 
-        host = arguments.get("--host") or "localhost"
+        # get defaults
+        cqlshrc = os.path.expanduser("~/.cassandra/cqlshrc")
+        if os.path.exists(cqlshrc):
+            parser = SafeConfigParser()
+            parser.read(cqlshrc)
+            default_host = parser.get("connection", "hostname")
+            default_port = parser.get("connection", "port")
+        else:
+            default_host = "localhost"
+
+        host = arguments.get("--host") or default_host
         return install(tmp[0], tmp[1],
                        install_cassandra=not arguments['--nocassandra'],
                        install_graph=arguments['--graph'],
