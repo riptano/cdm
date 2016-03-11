@@ -36,7 +36,6 @@ class ParsedCommand(object):
     def execute(self, session):
         s = str(self)
         logging.info(s)
-        print s
         tmp = None
         try:
             self.pre_execute(session)
