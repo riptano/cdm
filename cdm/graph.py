@@ -72,6 +72,10 @@ def main():
     session = Cluster(host).connect()
 
     graph = arguments['<keyspace>']
+    if graph not in session.cluster.metadata.keyspaces:
+        print "Graph {}{}{} not found".format(Fore.RED, graph, Style.RESET_ALL)
+        sys.exit(1)
+
     session.default_graph_options.graph_name = graph
     print Fore.GREEN + "Connected to {}/{}".format(host[0], graph) + Style.RESET_ALL
 
