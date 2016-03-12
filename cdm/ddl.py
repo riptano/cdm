@@ -1,4 +1,6 @@
+import logging
 from collections import namedtuple
+
 from colorama import Fore, Style
 from pyparsing import Word, alphas, Keyword, \
                       Optional, LineStart, \
@@ -8,7 +10,6 @@ from pyparsing import Word, alphas, Keyword, \
 class Noop(Exception): pass
 class ParseError(Exception): pass
 
-from collections import namedtuple
 
 """
 schema = graph.schema()
@@ -17,7 +18,6 @@ schema.buildVertexLabel('author').add()
 schema.buildEdgeLabel('authored').add()
 """
 
-import logging
 
 type_mapping = {
     "int" : "Integer.class",
