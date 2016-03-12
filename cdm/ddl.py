@@ -258,12 +258,12 @@ typename = oneOf("""ascii bigint blob boolean counter date
                   timestamp timeuuid tinyint uuid varchar varint""", caseless=True)
 
 create_graph = (create + graph + ident('name')).\
-                setParseAction(lambda s,l,t: CreateGraph(name=t.name))
+                setParseAction(lambda s, l, t: CreateGraph(name=t.name))
 
 show_graphs = (show + graphs).setParseAction(lambda s, l, t: ShowGraphs())
 
 use_graph = (use + ident('name')).\
-                setParseAction(lambda s,l,t: UseGraph(name=t.name))
+                setParseAction(lambda s, l, t: UseGraph(name=t.name))
 
 
 create_vertex = (create + vertex + Optional(label) + ident('label')).\
