@@ -15,7 +15,7 @@ from colorama import Fore, Style, init
 import readline
 
 from cdm.ddl import parse_line, ParseError
-
+import webbrowser
 init()
 import time
 histfile = os.path.join(os.path.expanduser("~"), ".dsegraphhist")
@@ -116,6 +116,10 @@ def main():
         if input == "help":
             print_help()
             continue
+        if input == "docs":
+            webbrowser.open("http://docs.datastax.com/en/datastax_enterprise/5.0/datastax_enterprise/graph/graphTOC.html#graphTOC__missing-elem-id--graphTOC")
+            continue
+
 
         total_time = None
         try:
