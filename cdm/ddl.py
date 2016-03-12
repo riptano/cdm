@@ -1,7 +1,9 @@
 from collections import namedtuple
 from colorama import Fore, Style
-from pyparsing import Word, alphas, Keyword, Optional, LineStart, \
-                    alphanums, oneOf, Literal, CaselessLiteral, OneOrMore, delimitedList
+from pyparsing import Word, alphas, Keyword, \
+                      Optional, LineStart, \
+                      alphanums, oneOf, Literal, \
+                      CaselessLiteral, OneOrMore, delimitedList
 
 class Noop(Exception): pass
 class ParseError(Exception): pass
