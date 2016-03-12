@@ -4,7 +4,7 @@ from cdm.ddl import parse_line, create_vertex, \
                     CreateVertex, \
                     CreateEdge, CreateProperty, \
                     CreateVertexIndex, \
-                    CreateGraph
+                    CreateGraph, ShowGraphs, describe_graph
 
 
 def test_create_graph():
@@ -13,11 +13,13 @@ def test_create_graph():
     assert isinstance(parsed, CreateGraph)
     assert "system.createGraph('jon').build()" in str(parsed)
 
+
+
 def test_show_graphs():
     s = "show graphs"
     parsed = parse_line(s)
-    assert isinstance(parsed, CreateGraph)
-    assert "system.createGraph('jon').build()" in str(parsed)
+    assert isinstance(parsed, ShowGraphs)
+    assert "system.graphs" in str(parsed)
 
 def test_create_vertex_label():
     cmd = "CREATE vertex movie"
@@ -83,3 +85,9 @@ def test_create_index_fulltext():
 # def test_create_index_materialize():
 #     result = parse_line("CREATE INDEX movie_title_idx ON movie(title) SEARCH");
 #     result = parse_line("CREATE INDEX user_id_idx ON movie(user_id) MATERIALIZED")
+
+
+def test_describe_graph():
+    s = "describe graph"
+    tmp = describe_graph.parseString(s)[0]
+    parse_line(s)

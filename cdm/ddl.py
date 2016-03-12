@@ -6,6 +6,8 @@ from pyparsing import Word, alphas, Keyword, Optional, LineStart, \
 class Noop(Exception): pass
 class ParseError(Exception): pass
 
+from collections import namedtuple
+
 """
 schema = graph.schema()
 def id = schema.buildPropertyKey('id', Integer.class).add()
@@ -73,6 +75,13 @@ class ShowGraphs(ParsedCommand):
                 print
         print
 
+
+class DropGraph(ParsedCommand):
+    name = None
+    def to_string(self):
+        return "system.dropGraph('{}')".format(self.name)
+
+
 # schema.buildVertexLabel('author').add()
 class CreateVertex(ParsedCommand):
     label = None
@@ -127,6 +136,64 @@ class CreateGraph(ParsedCommand):
         super(CreateGraph, self).execute(session)
 
 
+Property = namedtuple("Property", ["name", "type", "cardinality"])
+VertexLabel = namedtuple("Label", ["name"])
+EdgeLabel = namedtuple("Label", ["name", "cardinality", "directionality"])
+VertexIndex = namedtuple("VertexIndex", ["name", "type"])
+EdgeIndex = namedtuple("EdgeIndex", ["name", "type"])
+
+class DescribeGraph(ParsedCommand):
+    def to_string(self):
+        return "graph.schema().traversal().V().valueMap(true)"
+
+    def post_execute(self, session):
+        properties = []
+        vlabels = []
+        elabels = []
+        vindex = []
+        eindex = []
+
+        for element in self.result:
+            element = element.value
+            if 'label' not in element:
+                continue
+
+            if element['label'] == 'propertyKey':
+                properties.append(Property(name=element['name'][0],
+                                           type=element['dataType'][0],
+                                           cardinality=element['cardinality'][0]))
+            elif element['label'] == 'vertexLabel':
+                vlabels.append(VertexLabel(name=element['name'][0]))
+            elif element['label'] == 'edgeLabel':
+                elabels.append(EdgeLabel(name=element['name'][0],
+                                         cardinality=element['cardinality'][0],
+                                         directionality=element['directionality'][0]))
+            elif element['label'] == 'vertexIndex':
+                tmp = VertexIndex(name=element['name'][0],
+                                  type=element['type'][0])
+                vindex.append(tmp)
+            # elif element['label'] == 'edgeIndex':
+            #     tmp = EdgeIndex(name=element['name'][0],
+            #                       type=element['type'][0])
+
+        print "Vertex Labels: ",
+        for element in vlabels:
+            print element,
+
+        print "\nEdge Labels: ",
+        for element in elabels:
+            print element,
+
+        print "\nProperties: ",
+        for element in elabels:
+            print element,
+
+        print "\nVertex Indexes: ",
+        for element in vindex:
+            print element,
+
+
+        print "\nEdge Indexes: not implemented "
 
 class UseGraph(ParsedCommand):
     name = None
@@ -148,14 +215,15 @@ edge = Keyword('edge', caseless=True)
 graph = Keyword('graph', caseless=True)
 graphs = Keyword('graphs', caseless=True)
 show = Keyword('show', caseless=True)
-
+drop = Keyword("drop", caseless=True)
 index = Keyword('index', caseless=True)
 label = Keyword('label', caseless=True)
 
 on_ = Keyword("on", caseless=True).suppress()
 use = Keyword('use', caseless=True).suppress()
-describe = (Keyword("desc", caseless=True) |
-            Keyword("descibe", caseless=True)).suppress()
+
+describe = Keyword("desc", caseless=True) | \
+            Keyword("describe", caseless=True)
 
 # index types
 materialized = Keyword("materialized", caseless=True)
@@ -191,6 +259,13 @@ create_edge = (create + edge + Optional(label) + ident('label')).\
 create_property = (create + property + ident("name") + typename("type")).\
                 setParseAction(lambda s, l, t: CreateProperty(name=t.name, type=t.type))
 
+drop_graph = (drop + graph + ident('name')).setParseAction(
+                lambda s, l, t: DropGraph(name=t.name))
+
+describe_graph = (describe + graph).\
+    setParseAction(lambda s, l, t: DescribeGraph())
+
+
 def vi(s,l,t):
     return CreateVertexIndex(label=t.label,
                              name=t.index_name,
@@ -204,10 +279,10 @@ create_vertex_index = (create + index_type('type') + index + \
                         lparen + delimitedList(ident, ",")('fields') + rparen).\
                        setParseAction(vi)
 
-statement = create_graph | use_graph | \
-            create_vertex | \
+statement = create_graph | use_graph | create_vertex | \
             create_edge | create_property | \
-            create_vertex_index | show_graphs
+            create_vertex_index | show_graphs | drop_graph |\
+            describe_graph
 
 
 def parse_line(s):
