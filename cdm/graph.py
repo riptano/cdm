@@ -55,6 +55,8 @@ def print_result_set(result):
 def print_help():
     print """Enhanded DSE Graph REPL
 
+To read the DSE Graph documentation, type "docs"
+
 create graph <graph>
 use <graph>
 create vertex [label]
