@@ -108,6 +108,13 @@ class CreateProperty(ParsedCommand):
         return self.schema + "schema.buildPropertyKey('{}', {}).add()".format(self.name, t)
 
 
+"""
+ vLabel1.buildVertexIndex('search').search()
+.byPropertyKey('p_key_1')
+.byPropertyKey('p_key_2', fullTextIndex())
+.byPropertyKey('p_key_3', stringIndex())
+"""
+
 class CreateVertexIndex(ParsedCommand):
     label = None
     name = None
