@@ -142,6 +142,13 @@ EdgeLabel = namedtuple("Label", ["name", "cardinality", "directionality"])
 VertexIndex = namedtuple("VertexIndex", ["name", "type"])
 EdgeIndex = namedtuple("EdgeIndex", ["name", "type"])
 
+class Schema(object):
+    objects = {} # dict of lists, { Type: list of elements }
+    def add(self, obj):
+        # one of the named tuples
+        t = type(obj)
+
+
 class DescribeGraph(ParsedCommand):
     def to_string(self):
         return "graph.schema().traversal().V().valueMap(true)"
