@@ -233,8 +233,9 @@ class CreateEdgeIndex(ParsedCommand):
     def to_string(self):
         # graph.schema().vertexLabel('reviewer').buildEdgeIndex('ratedByStars', rated).direction(OUT). byPropertyKey('stars').add()
         s = self.schema
-        s.append("edge_label = schema.edgeLabel('{}'}\n".format(self.edge))
-        s.append("schema.vertexLabel('{vertex}').buildEdgeIndex('{name}', edge_label).direction({direction}).byPropertyKey('{property}').add()".format(vertex=self.vertex, name=self.name, direction=self.direction, property=self.property))
+        s += "edge_label = schema.edgeLabel('{}')\n".format(self.edge)
+        s += "schema.vertexLabel('{vertex}').buildEdgeIndex('{name}', edge_label).direction({direction}).byPropertyKey('{property}').add()".format(vertex=self.vertex, name=self.name, direction=self.direction, property=self.property)
+        print s
         return s
 
 
