@@ -35,10 +35,14 @@ class Context(object):
         encoded = b64encode(url)
         cache = self.cache_dir + encoded
 
+        self.feedback("Downloading {}".format(url))
         if not os.path.exists(cache):
             with open(cache, 'w') as fp:
                 data = urllib2.urlopen(url)
                 fp.write(data.read())
+            print "Download finished"
+        else:
+            self.feedback("Found in cache, skipping")
 
         fp = open(cache, 'r')
         return fp
