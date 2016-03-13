@@ -102,3 +102,5 @@ def test_create_edge_index():
     assert tmp.name == "ratedbyStars"
     assert tmp.vertex == "reviewer"
     assert tmp.property == "stars"
+
+    parse_line(s)
