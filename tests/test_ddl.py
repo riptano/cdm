@@ -78,13 +78,7 @@ def test_create_index_fulltext():
     result = create_vertex_index.parseString(s)[0]
     assert result.type == "search"
 
-
     result = parse_line(s)
-#     assert isinstance(result, CreateIndex)
-#
-# def test_create_index_materialize():
-#     result = parse_line("CREATE INDEX movie_title_idx ON movie(title) SEARCH");
-#     result = parse_line("CREATE INDEX user_id_idx ON movie(user_id) MATERIALIZED")
 
 
 def test_describe_graph():
@@ -94,7 +88,10 @@ def test_describe_graph():
 
 
 def test_create_edge_index():
-    s = "CREATE OUT index ratedbyStars on edge rated(reviewer.stars)"
+    # NOT WORKING, property is on the edge
+    # s = "CREATE OUT index ratedbyStars on edge rated(reviewer.stars)"
+
+    s = "CREATE OUT INDEX ratedbyStars ON VERTEX reviewer ON EDGE rated(stars)"
     tmp = create_edge_index.parseString(s)[0]
 
     assert tmp.edge == "rated"

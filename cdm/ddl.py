@@ -231,7 +231,11 @@ class CreateEdgeIndex(ParsedCommand):
     vertex = None
     property = None
     def to_string(self):
-        return "reviewer.buildEdgeIndex('ratedByStars', rated).direction(OUT).byPropertyKey('stars').add()"
+        # graph.schema().vertexLabel('reviewer').buildEdgeIndex('ratedByStars', rated).direction(OUT). byPropertyKey('stars').add()
+        s = self.schema
+        s.append("edge_label = schema.edgeLabel('{}'}\n".format(self.edge))
+        s.append("schema.vertexLabel('{vertex}').buildEdgeIndex('{name}', edge_label).direction({direction}).byPropertyKey('{property}').add()".format(vertex=self.vertex, name=self.name, direction=self.direction, property=self.property))
+        return s
 
 
 create = Keyword('create', caseless=True)
@@ -315,8 +319,11 @@ def cei(s, l, t):
                            vertex=t.vertex,
                            property=t.property)
 
-create_edge_index = (create + direction("direction") + index + ident('name') + on_ + edge +\
-                     ident('edge') + lparen + ident('vertex') + Literal(".") + ident('property')).\
+create_edge_index = (create + direction("direction") + index +
+                     ident('name') +
+                     on_ + vertex + ident('vertex') +
+                     on_ + edge + ident('edge') +
+                     lparen + ident('property') + rparen).\
                         setParseAction(cei)
 
 
