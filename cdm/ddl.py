@@ -224,6 +224,16 @@ class UseGraph(ParsedCommand):
             session.default_graph_options.graph_name = self.name
         raise Noop()
 
+class CreateEdgeIndex(ParsedCommand):
+    direction = None
+    name = None
+    edge = None
+    vertex = None
+    property = None
+    def to_string(self):
+        return "reviewer.buildEdgeIndex('ratedByStars', rated).direction(OUT).byPropertyKey('stars').add()"
+
+
 create = Keyword('create', caseless=True)
 property = Keyword('property', caseless=True)
 vertex = Keyword('vertex', caseless=True)
@@ -240,6 +250,8 @@ use = Keyword('use', caseless=True).suppress()
 
 describe = Keyword("desc", caseless=True) | \
             Keyword("describe", caseless=True)
+
+direction = Keyword("OUT", caseless=True) | Keyword("IN", caseless=True)
 
 # index types
 materialized = Keyword("materialized", caseless=True)
@@ -300,6 +312,16 @@ statement = create_graph | use_graph | create_vertex | \
             create_vertex_index | show_graphs | drop_graph |\
             describe_graph
 
+def cei(s, l, t):
+    return CreateEdgeIndex(direction=t.direction.lower(),
+                           name=t.name,
+                           edge=t.edge,
+                           vertex=t.vertex,
+                           property=t.property)
+
+create_edge_index = (create + direction("direction") + index + ident('name') + on_ + edge +\
+                     ident('edge') + lparen + ident('vertex') + Literal(".") + ident('property')).\
+                        setParseAction(cei)
 
 def parse_line(s):
     """

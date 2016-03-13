@@ -4,7 +4,7 @@ from cdm.ddl import parse_line, create_vertex, \
                     CreateVertex, \
                     CreateEdge, CreateProperty, \
                     CreateVertexIndex, \
-                    CreateGraph, ShowGraphs, describe_graph
+                    CreateGraph, ShowGraphs, describe_graph, create_edge_index
 
 
 def test_create_graph():
@@ -91,3 +91,14 @@ def test_describe_graph():
     s = "describe graph"
     tmp = describe_graph.parseString(s)[0]
     parse_line(s)
+
+
+def test_create_edge_index():
+    s = "CREATE OUT index ratedbyStars on edge rated(reviewer.stars)"
+    tmp = create_edge_index.parseString(s)[0]
+
+    assert tmp.edge == "rated"
+    assert tmp.direction == "out"
+    assert tmp.name == "ratedbyStars"
+    assert tmp.vertex == "reviewer"
+    assert tmp.property == "stars"
