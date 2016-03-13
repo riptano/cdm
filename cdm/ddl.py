@@ -307,10 +307,6 @@ create_vertex_index = (create + index_type('type') + index + \
                         lparen + delimitedList(ident, ",")('fields') + rparen).\
                        setParseAction(vi)
 
-statement = create_graph | use_graph | create_vertex | \
-            create_edge | create_property | \
-            create_vertex_index | show_graphs | drop_graph |\
-            describe_graph
 
 def cei(s, l, t):
     return CreateEdgeIndex(direction=t.direction.lower(),
@@ -322,6 +318,13 @@ def cei(s, l, t):
 create_edge_index = (create + direction("direction") + index + ident('name') + on_ + edge +\
                      ident('edge') + lparen + ident('vertex') + Literal(".") + ident('property')).\
                         setParseAction(cei)
+
+
+statement = create_graph | use_graph | create_vertex | \
+            create_edge | create_property | \
+            create_vertex_index | show_graphs | drop_graph |\
+            describe_graph | create_edge_index
+
 
 def parse_line(s):
     """
