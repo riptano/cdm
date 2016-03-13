@@ -314,7 +314,7 @@ create_vertex_index = (create + index_type('type') + index + \
 
 
 def cei(s, l, t):
-    return CreateEdgeIndex(direction=t.direction.lower(),
+    return CreateEdgeIndex(direction=t.direction.upper(),
                            name=t.name,
                            edge=t.edge,
                            vertex=t.vertex,
