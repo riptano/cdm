@@ -64,6 +64,7 @@ create vertex [label]
 create edge [label]
 create property [name] [type]
 CREATE [materialized|secondary|search] INDEX [name] ON VERTEX [label]([field])
+CREATE [in|out] INDEX [name] ON VERTEX [vertex-label] ON EDGE [edge-label]([edge-property])
 
     """
 
