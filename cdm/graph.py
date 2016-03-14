@@ -13,6 +13,7 @@ from cassandra.cluster import ResultSet
 import os
 from colorama import Fore, Style, init
 import readline
+import pprint
 
 from cdm.ddl import parse_line, ParseError
 import webbrowser
@@ -50,7 +51,7 @@ def print_result_set(result):
             elif row.type == "edge":
                 print "Edge[{}{}{}]".format(Fore.BLUE, row.label, Style.RESET_ALL), row.properties
         else:
-            print row.value
+            pprint.pprint(row.value)
 
 def print_help():
     print """Enhanded DSE Graph REPL
