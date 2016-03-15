@@ -43,7 +43,7 @@ class ParsedCommand(object):
         tmp = None
         try:
             self.pre_execute(session)
-            print Fore.GREEN + "Command rewritten to:\n\n{}".format(s) + Style.RESET_ALL
+            print Fore.GREEN + "Command rewritten to:\n{}".format(s) + Style.RESET_ALL
             tmp = session.execute_graph(s)
             self.result = tmp
         except Noop:
