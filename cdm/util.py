@@ -62,7 +62,7 @@ def update_datasets():
 def normalize_dataset_name(dataset):
     return dataset.replace("-", "_")
 
-def get_session(dataset, graph=False, host=None):
+def get_session(dataset, graph=False, host="localhost"):
     keyspace = normalize_dataset_name(dataset)
     if graph:
         try:
