@@ -20,6 +20,7 @@ def get_context(path):
                 cache_dir=cache_dir)
     return c
 
+
 @pytest.fixture(scope="session")
 def context():
     """
@@ -32,3 +33,7 @@ def context():
 
     return get_context(os.getcwd())
 
+
+def get_sample_context():
+    sample = os.path.join(os.getcwd(), "tests/sample")
+    return get_context(sample)

@@ -27,11 +27,12 @@ class Context(object):
         matching = [c for (name, c) in members if isinstance(c, type)
                     and c is not Installer
                     and issubclass(c, Installer)]
+
         if not matching:
             raise InstallerNotFound()
 
-
         installer = matching[0](self)
+        self.feedback("Installer found")
         return installer
 
     def __init__(self, root, dataset, session, cache_dir):

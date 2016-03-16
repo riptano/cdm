@@ -150,14 +150,11 @@ def install(dataset,
 
 
     # move to context
-    installer = context.load_installer()
+    installer = context.installer
     installer._cassandra = install_cassandra
     installer._search = install_search
     installer._graph = install_graph
-
-
-def install_local(path, install_search, install_graph):
-    pass
+    installer._install()
 
 
 def local_dataset_path(dataset_name):

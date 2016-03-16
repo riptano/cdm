@@ -38,6 +38,16 @@ class Installer(object):
         command = "cqlsh -k {} -f {} {}".format(self.keyspace, self.schema, host)
         subprocess.call(command, shell=True)
 
+
+    def cassandra_schema(self):
+        raise NotImplementedError("Cassandra schema required.")
+
+    def graph_schema(self):
+        raise NotImplementedError("Graph schema required.")
+
+    def search_schema(self):
+        raise NotImplementedError("Search schema required.")
+
     def install_cassandra(self):
         raise NotImplementedError("Cassandra data required")
 

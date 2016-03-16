@@ -5,7 +5,7 @@ from cdm.context import Context
 from cassandra.cluster import Cluster
 
 from cdm.installer import Installer
-from cdm.testing import get_context
+from cdm.testing import get_context, get_sample_context
 
 session = None
 
@@ -44,6 +44,7 @@ def test_download(context):
 def test_load_installer():
     sample = os.path.join(os.getcwd(), "tests/sample")
     context = get_context(sample)
+    context = get_sample_context()
 
     installer = context.installer
     assert isinstance(installer, Installer)
