@@ -95,7 +95,7 @@ def test_create_edge_index():
     tmp = create_edge_index.parseString(s)[0]
 
     assert tmp.edge == "rated"
-    assert tmp.direction == "out"
+    assert tmp.direction == "OUT"
     assert tmp.name == "ratedbyStars"
     assert tmp.vertex == "reviewer"
     assert tmp.property == "stars"
