@@ -101,3 +101,4 @@ def test_create_edge_index():
     assert tmp.property == "stars"
 
     parse_line(s)
+

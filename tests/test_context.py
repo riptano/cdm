@@ -4,6 +4,9 @@ from pytest import fixture
 from cdm.context import Context
 from cassandra.cluster import Cluster
 
+from cdm.installer import Installer
+from cdm.testing import get_context
+
 session = None
 
 @fixture
@@ -26,7 +29,7 @@ def context():
         session.set_keyspace(ks)
 
     return Context(root=os.getcwd(),
-                    dataset="test",
+                   dataset="test",
                    session=session,
                    cache_dir="./cache",
                    )
@@ -38,3 +41,9 @@ def test_download(context):
     fp = context.download("http://rustyrazorblade.com/pages/about-me.html")
 
 
+def test_load_installer():
+    sample = os.path.join(os.getcwd(), "tests/sample")
+    context = get_context(sample)
+
+    installer = context.installer
+    assert isinstance(installer, Installer)

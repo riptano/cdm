@@ -1,6 +1,13 @@
 import urllib2
 from base64 import b64encode
 import os.path
+import imp
+import inspect
+from cdm.installer import Installer
+
+
+class InstallerNotFound(Exception): pass
+
 
 class Context(object):
     root = None
@@ -8,6 +15,24 @@ class Context(object):
     cache_dir = None
     dataset = None
     keyspace = None
+
+    @property
+    def installer(self):
+        post_install = os.path.join(self.root, "install.py")
+
+        self.feedback("Loading installer {}".format(post_install))
+        module = imp.load_source("Installer", post_install)
+        members = inspect.getmembers(module)
+
+        matching = [c for (name, c) in members if isinstance(c, type)
+                    and c is not Installer
+                    and issubclass(c, Installer)]
+        if not matching:
+            raise InstallerNotFound()
+
+
+        installer = matching[0](self)
+        return installer
 
     def __init__(self, root, dataset, session, cache_dir):
         self.root = root

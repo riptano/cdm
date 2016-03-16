@@ -5,6 +5,21 @@ from cdm import get_session
 from cdm.context import Context
 
 
+def get_context(path):
+    cache_dir = join(os.getcwd(), ".cdmcache")
+
+    try:
+        os.mkdir(cache_dir)
+    except Exception as e:
+        # TODO don't be so silly
+        print e
+
+    c = Context(root=path,
+                dataset="test",
+                session=get_session("test", True),
+                cache_dir=cache_dir)
+    return c
+
 @pytest.fixture(scope="session")
 def context():
     """
@@ -15,16 +30,5 @@ def context():
     def fin():
         print "Teardown context"
 
-    cache_dir = join(os.getcwd(), ".cdmcache")
-    try:
-        os.mkdir(cache_dir)
-    except:
-        # TODO don't be so silly
-        pass
+    return get_context(os.getcwd())
 
-    c = Context(root=os.getcwd(),
-                dataset="test",
-                session=get_session("test", True),
-                cache_dir=cache_dir)
-
-    return c

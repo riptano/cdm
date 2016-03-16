@@ -25,7 +25,7 @@ DATASETS_URL = "https://raw.githubusercontent.com/cassandra-data-manager/cdm/mas
 CDM_CACHE = os.getenv("CDM_CACHE", os.path.expanduser("~/.cdm/"))
 CDM_PACKAGE_FILE = CDM_CACHE + "datasets.yaml"
 
-class InstallerNotFound(Exception): pass
+
 
 def list_datasets(search):
     print "Available datasets:"
@@ -148,24 +148,13 @@ def install(dataset,
                       session=session,
                       cache_dir=cache_dir)
 
-    # TODO move to tested function
-    post_install = path + "/install.py"
-    context.feedback("Loading installer {}".format(post_install))
-    module = imp.load_source("Installer", post_install)
-    members = inspect.getmembers(module)
 
-    matching = [c for (name, c) in members if isinstance(c, type)
-                                            and c is not Installer
-                                            and issubclass(c, Installer)]
-    if not matching:
-        raise InstallerNotFound()
-
-
-    installer = matching[0](context)
+    # move to context
+    installer = context.load_installer()
     installer._cassandra = install_cassandra
     installer._search = install_search
     installer._graph = install_graph
-    installer._install()
+
 
 def install_local(path, install_search, install_graph):
     pass
@@ -201,3 +190,4 @@ def create_keyspace():
     # TODO ask for strategy and RF
     print "Creating keyspace (SimpleStrategy)"
     print "Replication factor 1"
+
