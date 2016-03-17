@@ -4,7 +4,7 @@ import os.path
 import imp
 import inspect
 from cdm.installer import Installer
-
+import logging
 
 class InstallerNotFound(Exception): pass
 
@@ -20,7 +20,7 @@ class Context(object):
     def installer(self):
         post_install = os.path.join(self.root, "install.py")
 
-        self.feedback("Loading installer {}".format(post_install))
+        logging.info("Loading installer {}".format(post_install))
         module = imp.load_source("Installer", post_install)
         members = inspect.getmembers(module)
 
@@ -61,12 +61,12 @@ class Context(object):
         encoded = b64encode(url)
         cache = self.cache_dir + encoded
 
-        self.feedback("Downloading {}".format(url))
+        logging.info("Downloading {}".format(url))
         if not os.path.exists(cache):
             with open(cache, 'w') as fp:
                 data = urllib2.urlopen(url)
                 fp.write(data.read())
-            print "Download finished"
+            logging.info("Download finished")
         else:
             self.feedback("Found in cache, skipping")
 
@@ -80,11 +80,11 @@ class Context(object):
         :return: None
         """
         for file in os.listdir(self.cache_dir):
-            print os.remove(self.cache_dir + file)
+            logging.info(os.remove(self.cache_dir + file))
 
 
     def feedback(self, msg):
-        print msg
+        logging.info(msg)
 
 
     def install(self):

@@ -2,7 +2,7 @@ import os
 import os.path
 import subprocess
 import urllib2
-
+import logging
 import yaml
 from git import Repo
 from importlib import import_module
@@ -14,8 +14,6 @@ from cassandra.cqlengine.connection import setup, get_session as get_db_session
 
 from cdm.util import *
 from cdm.context import Context
-import imp
-import inspect
 from cdm.installer import Installer
 import sys
 from distutils.spawn import find_executable
@@ -41,7 +39,7 @@ def list_datasets(search):
         print "{:20} {}".format(name, details['description'])
 
     if found == 0:
-        print "No datasets found"
+        logging.info("No datasets found")
 
 
 def open_datasets():

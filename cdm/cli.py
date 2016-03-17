@@ -10,8 +10,12 @@ Usage:
     cdm web
     cdm tutorials <dataset>
 
+Options:
+    --debug
+
 Examples:
     cdm install demo
+
 """
 
 import sys
@@ -19,6 +23,7 @@ sys.path.append("")
 import os
 import os.path
 from ConfigParser import SafeConfigParser
+import logging
 
 # 3rd party
 
@@ -27,6 +32,8 @@ from cdm.util import *
 
 DEBUG = False
 
+# allow for schema management fun
+os.environ['CQLENG_ALLOW_SCHEMA_MANAGEMENT'] = "1"
 
 def main():
     arguments = docopt(__doc__)
