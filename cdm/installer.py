@@ -35,7 +35,10 @@ class Installer(object):
         if self._graph:
             self.install_graph()
 
-        self.context.feedback("Done with install.")
+        # set up tutorials
+
+
+        logging.info("Done with install.")
 
     def install_schema(self):
         # do not override

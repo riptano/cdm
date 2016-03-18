@@ -4,7 +4,7 @@ Usage:
     cdm search [<term>]
     cdm list [<term>]
     cdm show <dataset>
-    cdm install [--host=<host>] [--keyspace=<keyspace>] [--dry-run] [--nocassandra] [--graph] [--search] <dataset>
+    cdm install [--host=<host>] [--keyspace=<keyspace>] [--dry-run] [--nocassandra] [--graph] [--search] [--noupdate] <dataset>
     cdm update
     cdm stream <dataset>
     cdm web
@@ -92,6 +92,7 @@ def main():
             p.wait()
             sys.exit(p.returncode)
         else:
+            # move into the tutorial directory
             os.execvp("jupyter-notebook", ['notebook'])
 
 
