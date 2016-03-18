@@ -19,10 +19,14 @@ Examples:
 """
 
 import sys
+
+from subprocess import Popen
+
 sys.path.append("")
 import os
 import os.path
 from ConfigParser import SafeConfigParser
+import IPython
 import logging
 
 # 3rd party
@@ -77,6 +81,22 @@ def main():
 
     if arguments["show"]:
         return show_dataset_details(arguments["<dataset>"])
+
+    if arguments["tutorials"]:
+        if sys.platform.startswith('win'):
+            p = Popen(["jupyter-notebook"], shell=True)
+            # Don't raise KeyboardInterrupt in the parent process.
+            # Set this after spawning, to avoid subprocess inheriting handler.
+            import signal
+            signal.signal(signal.SIGINT, signal.SIG_IGN)
+            p.wait()
+            sys.exit(p.returncode)
+        else:
+            os.execvp("jupyter-notebook", ['notebook'])
+
+
+        from jupyter_core.command import main
+        main()
 
     print "Done"
 
