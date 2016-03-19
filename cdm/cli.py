@@ -48,7 +48,6 @@ def main():
         pass
 
 
-
     if arguments["search"] or arguments["list"]:
         return list_datasets(arguments["<term>"])
 
@@ -84,6 +83,16 @@ def main():
         return show_dataset_details(arguments["<dataset>"])
 
     if arguments["tutorials"]:
+        # move into the tutorial directory
+
+        if arguments["<dataset>"] == ".":
+            os.chdir("tutorials")
+        else:
+            dest = os.path.join(CDM_CACHE,
+                                "tutorials",
+                                arguments["<dataset>"])
+            os.chdir(dest)
+
         if sys.platform.startswith('win'):
             p = Popen(["jupyter-notebook"], shell=True)
             # Don't raise KeyboardInterrupt in the parent process.
@@ -93,12 +102,7 @@ def main():
             p.wait()
             sys.exit(p.returncode)
         else:
-            # move into the tutorial directory
             os.execvp("jupyter-notebook", ['notebook'])
-
-
-        from jupyter_core.command import main
-        main()
 
     print "Done"
 

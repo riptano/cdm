@@ -6,7 +6,7 @@ import logging
 import yaml
 from git import Repo
 from importlib import import_module
-
+from shutil import copytree, rmtree
 from cassandra.cqlengine.connection import setup, get_session as get_db_session
 
 # try to import the dse session
@@ -136,6 +136,23 @@ def install(dataset,
         cache_dir = CDM_CACHE + dataset + "_cache"
         sys.path.append(path) # so imports work
 
+        tutorials_root_dir = os.path.join(CDM_CACHE, "tutorials")
+
+        if not os.path.exists(tutorials_root_dir):
+            logging.info("Creating tutorials directory")
+            os.mkdir(tutorials_root_dir)
+
+        logging.info("Setting up tutorials")
+        dest = os.path.join(tutorials_root_dir, dataset)
+
+        if os.path.exists(dest):
+            logging.info("Clearing out old tutorial directory")
+            rmtree(dest)
+
+        copytree(os.path.join(path, "tutorials"), dest)
+
+
+
     print "Connecting"
 
     session = get_session(dataset, install_graph, host=host)
@@ -156,6 +173,7 @@ def install(dataset,
     installer._search = install_search
     installer._graph = install_graph
     installer._install()
+
 
 
 def local_dataset_path(dataset_name):
