@@ -48,6 +48,7 @@ def main():
         pass
 
 
+
     if arguments["search"] or arguments["list"]:
         return list_datasets(arguments["<term>"])
 

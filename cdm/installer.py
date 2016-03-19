@@ -1,5 +1,6 @@
 import subprocess
 import logging
+import os
 
 from cassandra.cqlengine.management import sync_table
 from cassandra.cqlengine.models import ModelMetaClass
@@ -19,12 +20,12 @@ class Installer(object):
 
     def post_init(self):
         # will get called after init
-        self.context.feedback("Post init, nothing to do.")
+        logging.info("Post init, nothing to do.")
 
     def _install(self):
         self.install_schema()
         self.post_init()
-        self.context.feedback("post_init() complete")
+        logging.info("post_init() complete")
 
         if self._cassandra_schema:
             self.install_schema()
@@ -36,7 +37,6 @@ class Installer(object):
             self.install_graph()
 
         # set up tutorials
-
 
         logging.info("Done with install.")
 
@@ -50,10 +50,6 @@ class Installer(object):
                 sync_table(table)
             else:
                 self.context.session.execute(table)
-
-        # host = self.context.session.hosts[0].address
-        # command = "cqlsh -k {} -f {} {}".format(self.keyspace, self.schema, host)
-        # subprocess.call(command, shell=True)
 
 
     def cassandra_schema(self):
@@ -79,7 +75,7 @@ class Installer(object):
 
     @property
     def schema(self):
-        return self.context.root + "/schema.cql"
+        return os.path.join(self.context.root, "/schema.cql")
 
     @property
     def keyspace(self):
