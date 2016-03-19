@@ -1,0 +1,5 @@
+/cache/
+/.cache
+/.cdmcache
+.ipynb_checkpoints
+
