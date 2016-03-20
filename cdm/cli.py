@@ -6,8 +6,6 @@ Usage:
     cdm show <dataset>
     cdm install [--host=<host>] [--keyspace=<keyspace>] [--nocassandra] [--graph] [--search] [--noupdate] <dataset>
     cdm update
-    cdm stream <dataset>
-    cdm web
     cdm tutorials <dataset>
     cdm new <dataset>
     cdm check
@@ -19,6 +17,8 @@ Examples:
     cdm install demo
 
 """
+
+# for the future - cdm web & cdm stream
 
 import sys
 
