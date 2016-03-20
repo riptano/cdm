@@ -29,11 +29,4 @@ DSE Search Support
 
 Coming soon.
 
-Web Interface
--------------
-
-Coming soon.
-
-Streaming
-------------
 
