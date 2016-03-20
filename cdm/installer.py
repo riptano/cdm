@@ -5,6 +5,8 @@ import os
 from cassandra.cqlengine.management import sync_table
 from cassandra.cqlengine.models import ModelMetaClass
 
+logger = logging.getLogger(__name__)
+
 class Installer(object):
     context = None
 
@@ -20,12 +22,12 @@ class Installer(object):
 
     def post_init(self):
         # will get called after init
-        logging.info("Post init, nothing to do.")
+        logger.info("Post init, nothing to do.")
 
     def _install(self):
         self.install_schema()
         self.post_init()
-        logging.info("post_init() complete")
+        logger.info("post_init() complete")
 
         if self._cassandra_schema:
             self.install_schema()
@@ -38,11 +40,11 @@ class Installer(object):
 
         # set up tutorials
 
-        logging.info("Done with install.")
+        logger.info("Done with install.")
 
     def install_schema(self):
         # do not override
-        logging.info("Applying schema {}".format(self.schema))
+        logger.info("Applying schema {}".format(self.schema))
 
         self.context.session.set_keyspace(self.keyspace)
         for table in self.cassandra_schema():
@@ -66,11 +68,11 @@ class Installer(object):
         raise NotImplementedError("Cassandra data required")
 
     def install_search(self):
-        logging.info("Search requested but not implemented")
+        logger.info("Search requested but not implemented")
         raise NotImplementedError()
 
     def install_graph(self):
-        logging.info("Graph requested but not implemented")
+        logger.info("Graph requested but not implemented")
         raise NotImplementedError()
 
     @property
