@@ -6,8 +6,22 @@
 Cassandra Dataset Manager
 ==========================
 
-Cassandra Dataset Manager, (cdm) is a tool to make it simple to get started with Apache Cassandra or Datastax Enterprise (DSE).
+Cassandra Dataset Manager, (cdm) is a tool to make it simple to start learning Apache Cassandra or Datastax Enterprise (DSE).  This utility will provide a framework for building and installing datasets, which can then be explored via cqlsh, DevCenter, and the Jupyter notebooks that are included with datasets.  In short, the focus of this tool is on the following:
 
+development of datasets
+    The CDM framework will provide a consistent experience for people interested in sharing public datasets.
+
+installation of datasets
+    It should take 15 minutes or less for a user to go from "I want to learn" to "I'm looking at data".  The experience of loading data should be as simple as possible, with helpful error messages when things do go wrong or a requirement it not installed.
+
+Visual Learning via examples
+    Jupyter notebooks provide an elegant means of teaching database and data model concepts by interweaving explanatory text and executable code.  The CDM framework will provide convenient means of displaying information from Cassandra, Search, and Graph.
+
+
+## Things this is not, nor will it ever be:
+
+1. A bulk loader
+2. A way for you to manage your schema in your projects
 
 Contents:
 
