@@ -4,17 +4,23 @@
 Creating Datasets
 ==================
 
+This information is relevant only to developers wishing to create their own datasets for distribution.
+
+Developer Quickstart
+--------------------
+
 Make sure CDM is installed.  You will not be able to provide additional Python modules other than what CDM already provides (yet).
 
 Create a new dataset with the :bash:`cdm new` command.  It will generate a project skeleton for you.  For example::
 
     cdm new example-name
 
+
 Provided Libraries
 -------------------
 
 Cassandra Driver
-    The project would be useless without a driver, so it's included.  We will stay reasonably up to date with current packages.  It is always made available via the :doc:`/context`.
+    The project would be useless without a driver, so it's included.  We will stay reasonably up to date with current packages.  It is always made available via the :doc:`/context` as the :code:`session` variable.
 
 Pandas
     Pandas is an excellent library for reading various raw formats such as CSV.  It also provides facilities for data manipulation, which may be required to transform data.
