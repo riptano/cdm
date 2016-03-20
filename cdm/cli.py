@@ -28,23 +28,15 @@ sys.path.append("")
 import os
 import os.path
 from ConfigParser import SafeConfigParser
-import IPython
 import logging
-
-
-
 
 # 3rd party
 
 from docopt import docopt
 from cdm.util import *
 
-DEBUG = False
-
 # allow for schema management fun
 os.environ['CQLENG_ALLOW_SCHEMA_MANAGEMENT'] = "1"
-
-# logging.basicConfig()
 
 # set up logging to console
 console = logging.StreamHandler()
@@ -53,13 +45,8 @@ console.setLevel(logging.INFO)
 # formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
 # console.setFormatter(formatter)
 # add the handler to the root logger
-logging.getLogger('').addHandler(console)
-
-# logger = logging.getLogger(__name__)
-
-# logging.basicConfig()
-
-
+root_logger = logging.getLogger('')
+root_logger.setLevel(logging.INFO)
 
 
 def main():

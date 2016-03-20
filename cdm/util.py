@@ -23,7 +23,7 @@ DATASETS_URL = "https://raw.githubusercontent.com/cassandra-data-manager/cdm/mas
 CDM_CACHE = os.getenv("CDM_CACHE", os.path.expanduser("~/.cdm/"))
 CDM_PACKAGE_FILE = CDM_CACHE + "datasets.yaml"
 
-
+logger = logging.getLogger(__name__)
 
 def list_datasets(search):
     print "Available datasets:"
@@ -39,7 +39,7 @@ def list_datasets(search):
         print "{:20} {}".format(name, details['description'])
 
     if found == 0:
-        logging.info("No datasets found")
+        logger.info("No datasets found")
 
 
 def open_datasets():
@@ -139,14 +139,14 @@ def install(dataset,
         tutorials_root_dir = os.path.join(CDM_CACHE, "tutorials")
 
         if not os.path.exists(tutorials_root_dir):
-            logging.info("Creating tutorials directory")
+            logger.info("Creating tutorials directory")
             os.mkdir(tutorials_root_dir)
 
-        logging.info("Setting up tutorials")
+        logger.info("Setting up tutorials")
         dest = os.path.join(tutorials_root_dir, dataset)
 
         if os.path.exists(dest):
-            logging.info("Clearing out old tutorial directory")
+            logger.info("Clearing out old tutorial directory")
             rmtree(dest)
 
         copytree(os.path.join(path, "tutorials"), dest)
