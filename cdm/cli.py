@@ -4,11 +4,12 @@ Usage:
     cdm search [<term>]
     cdm list [<term>]
     cdm show <dataset>
-    cdm install [--host=<host>] [--keyspace=<keyspace>] [--dry-run] [--nocassandra] [--graph] [--search] [--noupdate] <dataset>
+    cdm install [--host=<host>] [--keyspace=<keyspace>] [--nocassandra] [--graph] [--search] [--noupdate] <dataset>
     cdm update
     cdm stream <dataset>
     cdm web
     cdm tutorials <dataset>
+    cdm new <dataset>
 
 Options:
     --debug
@@ -29,6 +30,9 @@ from ConfigParser import SafeConfigParser
 import IPython
 import logging
 
+
+
+
 # 3rd party
 
 from docopt import docopt
@@ -38,6 +42,24 @@ DEBUG = False
 
 # allow for schema management fun
 os.environ['CQLENG_ALLOW_SCHEMA_MANAGEMENT'] = "1"
+
+# logging.basicConfig()
+
+# set up logging to console
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+# set a format which is simpler for console use
+# formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
+# console.setFormatter(formatter)
+# add the handler to the root logger
+logging.getLogger('').addHandler(console)
+
+# logger = logging.getLogger(__name__)
+
+# logging.basicConfig()
+
+
+
 
 def main():
     arguments = docopt(__doc__)
