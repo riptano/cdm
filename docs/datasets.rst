@@ -4,6 +4,26 @@
 Creating Datasets
 ==================
 
+Make sure CDM is installed.  You will not be able to provide additinal python modules other than what CDM already provides.
+
+Create a new dataset with the :bash:`cdm new` command.  It will generate a project skeleton for you.  For example::
+
+    cdm new example-name
+
+Provided Libraries
+-------------------
+
+Cassandra Driver
+    The project would be useless without a driver, so it's included.  We will stay reasonably up to date with current packages.  It is always made available via the :doc:`/context`.
+
+Pandas
+    Pandas is an excellent library for reading various raw formats such as CSV.  It also provides facilities for data manipulation, which may be required to transform data.
+
+Faker
+    Faker makes for each generation of fake data.  This is especially useful when you're dealing with an incomplete data model or one that has been anonymized.
+
+
+
 Dataset Directory Structure
 --------------------------------
 
