@@ -39,7 +39,6 @@ The following skeleton directory structure is required::
     /tests
     schema.cql
 
-Sometime in the future, :bash:`cdm new` will be able to generate a skeleton project.
 
 Testing
 -------
