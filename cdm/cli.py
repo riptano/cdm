@@ -10,6 +10,7 @@ Usage:
     cdm web
     cdm tutorials <dataset>
     cdm new <dataset>
+    cdm check
 
 Options:
     --debug
