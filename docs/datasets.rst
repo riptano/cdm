@@ -4,7 +4,7 @@
 Creating Datasets
 ==================
 
-Make sure CDM is installed.  You will not be able to provide additinal python modules other than what CDM already provides.
+Make sure CDM is installed.  You will not be able to provide additional Python modules other than what CDM already provides (yet).
 
 Create a new dataset with the :bash:`cdm new` command.  It will generate a project skeleton for you.  For example::
 

@@ -1,7 +1,7 @@
 Context
 =======
 
-A Context provides useful information and database functionality automatically for the developer.  There is no need to select a keyspace, this has been done for you already.
+A Context provides useful information and database functionality automatically for the developer.  There is no need to select a keyspace, this has been done for you already.  From an :doc:`/installer` the context is always available via :code:`self.context`.
 
 
 Downloading and Caching Files
