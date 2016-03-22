@@ -33,7 +33,6 @@ For example, in movielens-small, we define our :code:`Movie` Model similar to th
         avg_rating = Float()
         genres = Set(Text)
 
-
     class MovieLensInstaller(Installer):
         def cassandra_schema(self):
             return [Movie]
