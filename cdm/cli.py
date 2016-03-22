@@ -8,7 +8,7 @@ Usage:
     cdm update
     cdm tutorials <dataset>
     cdm new <dataset>
-    cdm check
+    cdm test
 
 Options:
     --debug

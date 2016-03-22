@@ -34,6 +34,10 @@ Faker
     Faker makes for each generation of fake data.  This is especially useful when you're dealing with an incomplete data model or one that has been anonymized.
 
 
+Hooks
+------
+
+A number of hooks are available.
 
 Dataset Directory Structure
 --------------------------------
@@ -50,6 +54,12 @@ Testing
 
 Testing datasets is important.  This project is leveraging features of py.test that make it easy to test datasets.
 
+CDM will include a tool for testing a project.  This runs all the projects unit tests as well as tests that verify project structure and conventions::
+
+    cdm test
+
+All tests must pass :code:`cdm test` for inclusion in the official Dataset repository.
+
 Installers
 -----------
 
@@ -57,6 +67,23 @@ Installers are created by having a file called :code:`install.py` in the top lev
 
 Cassandra Schema
 -------------------
+
+Working with a Cassandra schema is very flexible using CDM.  There are several options available.
+
+1. Use your own schema.cql file
+
+This is useful if you have a schema somewhere already that you want to write to disk through cqlsh.
+
+2. Return CQLEngine models.
+
+This is a convenient as you'll frequently want to
+
+2. Return a custom series of strings
+
+
+
+Cassandra Data
+---------------
 
 
 DSE Search Schema
