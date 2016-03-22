@@ -1,8 +1,8 @@
 .. role:: bash(code)
 :language: bash
 
-Creating Datasets
-==================
+Guide: Creating Datasets
+========================
 
 This information is relevant only to developers wishing to create their own datasets for distribution.
 
@@ -11,8 +11,8 @@ What is a Dataset?
 
 Think of a Dataset similar to a package managed by yum or apt.  Instead of binaries and configuration files, installing a Dataset gives you a Cassandra schema, sample data, and a Jupyter notebook with tutorials on how to use that data.
 
-Developer Quickstart
---------------------
+Create a new project from the skeleton
+---------------------------------------
 
 Make sure CDM is installed.  You will not be able to provide additional Python modules other than what CDM already provides (yet).
 
@@ -68,19 +68,7 @@ Installers are created by having a file called :code:`install.py` in the top lev
 Cassandra Schema
 -------------------
 
-Working with a Cassandra schema is very flexible using CDM.  There are several options available.
-
-1. Use your own schema.cql file
-
-This is useful if you have a schema somewhere already that you want to write to disk through cqlsh.
-
-2. Return CQLEngine models.
-
-This is a convenient as you'll frequently want to
-
-2. Return a custom series of strings
-
-
+Managing schema is easy.  See :doc:`/schema/cassandra`.
 
 Cassandra Data
 ---------------
