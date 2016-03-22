@@ -27,7 +27,7 @@ Things this is not
 Want to get up and running?  See the :doc:`/quickstart`
 
 
-Full Documentation
+User Documentation
 -------------------
 
 .. toctree::
@@ -35,10 +35,15 @@ Full Documentation
 
    quickstart
    usage
-   developer
-   datasets
    faq
 
+Developer Documentation
+-----------------------
+
+.. toctree::
+   :maxdepth: 2
+
+   datasets
 
 
 Indices and tables
