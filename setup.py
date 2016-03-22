@@ -19,7 +19,7 @@ setup(
         install_requires=[
             "cassandra-driver>=3.1.0a2", "docopt>=0.6.1",
             "gitpython", "PyYAML", "pandas>=0.17.1",
-            "recommonmark==0.4.0", "colorama", "pyparsing==2.1.0",
+             "colorama",
             "fake-factory", "requests>=2.9.1"
         ]
 
