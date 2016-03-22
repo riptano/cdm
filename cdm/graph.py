@@ -54,7 +54,7 @@ def print_result_set(result):
             pprint.pprint(row.value)
 
 def print_help():
-    print """Enhanded DSE Graph REPL
+    print """Enhanced DSE Graph REPL
 
 To read the DSE Graph documentation, type "docs"
 
