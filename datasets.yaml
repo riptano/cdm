@@ -3,6 +3,6 @@ demo:
   description: Demo dataset.  Useful for learning CDM, not much else.
 
 movielens-small:
-  url: https://github.com/cassandra-dataset-manager/movielens-small.git
+  url: https://github.com/rustyrazorblade/movielens-small.git
   description: Small movielens dataset.  100k ratings, 1000 users, 1700 movies.
   maintainer: Jon Haddad
