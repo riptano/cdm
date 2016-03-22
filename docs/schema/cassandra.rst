@@ -13,7 +13,7 @@ To easily use a schema file, make sure your :doc:`installer` subclasses :code:`S
     class MyInstaller(Installer, SimpleCQLSchema):
         pass
 
-Put your schema in schema.cql, and it will automatically be picked up and loaded, splitting the statements on :code:`;`;
+Put your schema in schema.cql, and it will automatically be picked up and loaded, splitting the statements on :code:`;`.
 
 CQLEngine Models
 ------------------
@@ -33,6 +33,8 @@ For example, in movielens-small, we define our :code:`Movie` Model similar to th
         avg_rating = Float()
         genres = Set(Text)
 
+In our installer, we return a list of table models::
+
     class MovieLensInstaller(Installer):
         def cassandra_schema(self):
             return [Movie]
@@ -40,10 +42,29 @@ For example, in movielens-small, we define our :code:`Movie` Model similar to th
 
 
 
-Explicitly Using Strings
--------------------------
+Specifying a Schema Inline
+-------------------------------
 
-This will be necessary for UDAs/UDFs as they aren't simply split on :code:`;`.  A future version of CDM may include a parser to properly support this but it's unlikely anytime soon.
+This will be necessary for UDAs/UDFs as they aren't simply split on :code:`;`.  A future version of CDM may include a parser to properly support this but it's unlikely anytime soon.  Until that day comes, it's possible to use fat strings to specify schema::
 
-Mixed
------
+    class MovieLensInstaller(Installer):
+        def cassandra_schema(self):
+            statements = ["""CREATE TABLE movies
+                            (id uuid primary key,
+                             name text)""",
+                         """CREATE CUSTOM INDEX on movies(name)
+                            USING 'org.apache.cassandra.index.sasi.SASIIndex'"""
+            return statements
+
+Mixed Mode
+----------
+
+There are cases which are not handled with CQLEngine yet.  Materialized views, SASI indexes, UDFs, UDAs are all difficult to express.  Python allows us a lot of flexibility by allowing lists to contain objects of mixed types.  We can leverage our CQLEngine models for our tables and provide fat strings for the rest of the schema::
+
+    class MovieLensInstaller(Installer):
+        def cassandra_schema(self):
+            statements = [Movie,
+                           """CREATE CUSTOM INDEX on movies(name)
+                              USING 'org.apache.cassandra.index.sasi.SASIIndex'"""]
+
+This is cool because we can leverage CQLEngine for our database models but still get the flexibility of using any CQL that it doesn't support yet.
