@@ -42,8 +42,10 @@ Developer Documentation
 
 .. toctree::
    :maxdepth: 2
+   :glob:
 
    datasets
+   schema/*
 
 
 Indices and tables
