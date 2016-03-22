@@ -6,6 +6,11 @@ Creating Datasets
 
 This information is relevant only to developers wishing to create their own datasets for distribution.
 
+What is a Dataset?
+------------------
+
+Think of a Dataset similar to a package managed by yum or apt.  Instead of binaries and configuration files, installing a Dataset gives you a Cassandra schema, sample data, and a Jupyter notebook with tutorials on how to use that data.
+
 Developer Quickstart
 --------------------
 
