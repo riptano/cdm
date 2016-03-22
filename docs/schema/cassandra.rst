@@ -18,7 +18,28 @@ Put your schema in schema.cql, and it will automatically be picked up and loaded
 CQLEngine Models
 ------------------
 
-This is a convenient as you'll frequently want to
+This is a convenient as you'll frequently want to leverage CQLEngine models for validating and inserting data.  We'll use the :code:`cassandra_schema()` hook to return the classes we want sync'ed to the database.
+
+For example, in movielens-small, we define our :code:`Movie` Model similar to this::
+
+
+    class Movie(Model):
+        __table_name__ = 'movies'
+        id = Integer(primary_key=True)
+        name = Text()
+        release_date = Date()
+        video_release_date = Date()
+        url = Text()
+        avg_rating = Float()
+        genres = Set(Text)
+
+
+    class MovieLensInstaller(Installer):
+        def cassandra_schema(self):
+            return [Movie]
+
+
+
 
 Explicitly Using Strings
 -------------------------
