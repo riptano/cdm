@@ -65,18 +65,10 @@ Installers
 
 Installers are created by having a file called :code:`install.py` in the top level of your dataset.  The installer must subclass :code:`cdm.installer.Installer`.  The cdm utility will discover the Installer automatically so the name is somewhat arbitrary, however it should reflect the dataset's name as a convention.
 
-Cassandra Schema
--------------------
+DSE Search
+----------
 
-Managing schema is easy.  See :doc:`/schema/cassandra`.
-
-Cassandra Data
----------------
-
-
-DSE Search Schema
------------------
-
+An installer can provide search functionality.  A user may enable search with the :code:`--search` flag.
 
 DSE Graph
 -----------
