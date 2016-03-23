@@ -151,7 +151,11 @@ def install(dataset,
 
         copytree(os.path.join(path, "tutorials"), dest)
 
-
+    # install requirements.  need to come back to this.
+    # req_file = os.path.join(path, "requirements.txt")
+    # if os.path.exists(req_file):
+    #     print "Installing requirements"
+    #     subprocess.check_call(["pip", "install", "-r", req_file])
 
     print "Connecting"
 
