@@ -94,17 +94,18 @@ DSE Graph Data
 
 Let's look at an example::
 
-    def install_graph(self):
-        # create movies
-        session = self.context.session
-        from dse.graph import SimpleGraphStatement
+    class MyInstaller(Installer):
+        def install_graph(self):
+            # create movies
+            session = self.context.session
+            from dse.graph import SimpleGraphStatement
 
-        movie_stmt = SimpleGraphStatement("graph.addVertex(label, 'movie', 'name', name, 'id', movie_id)")
+            movie_stmt = SimpleGraphStatement("graph.addVertex(label, 'movie', 'name', name, 'id', movie_id)")
 
-        for movie in self.movies.itertuples():
-            params = {"name": movie.name,
-                      "movie_id": movie.Index}
-            session.execute_graph(movie_stmt, params)
+            for movie in self.movies.itertuples():
+                params = {"name": movie.name,
+                          "movie_id": movie.Index}
+                session.execute_graph(movie_stmt, params)
 
 
 Provided Libraries
