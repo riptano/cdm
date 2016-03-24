@@ -33,12 +33,27 @@ Set up your :code:`post_init()` hook.  You should load any data you'll need for 
             context = self.context
             self.my_data = some_helper()
 
-
+If you need to download any data (like a zip file of CSVs, etc), you can use context.download(url) which will return a file pointer.
 
 Set up Cassandra Schema
 ------------------------
 
 Read up on the different options for configuring your :doc:`/schema/cassandra`.
+
+Load Cassandra Data
+---------------------
+
+Assuming you've loading some data into memory in the :code:`post_init()`, you can now load data into your schema.
+
+Loading data::
+
+    class MyInstaller(Installer):
+        def install_cassandra(self):
+            context = self.context
+            session = context.session()
+            prepared = session.prepare("INSERT INTO data (key, value) VALUES (?, ?)")
+            for row in self.data:
+                session.execute(prepared, row.key, row.value)
 
 
 Provided Libraries
