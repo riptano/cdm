@@ -33,7 +33,7 @@ Set up your :code:`post_init()` hook.  You should load any data you'll need for 
             context = self.context
             self.my_data = some_helper()
 
-If you need to download any data (like a zip file of CSVs, etc), you can use context.download(url) which will return a file pointer.
+If you need to download any data (like a zip file of CSVs, etc), you can use :code:`context.download(url)` which will return a file pointer.
 
 Set up Cassandra Schema
 ------------------------
