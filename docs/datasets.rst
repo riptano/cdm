@@ -56,6 +56,18 @@ Loading data::
                 session.execute(prepared, row.key, row.value)
 
 
+
+DSE Search
+----------
+
+An installer can provide search functionality.  A user may enable search with the :code:`--search` flag.
+
+DSE Graph
+-----------
+
+Graph support can be activated by the :bash:`--graph` command line switch.  If this switch is supplied, your Installer's :code:`install_graph()` method will be called.  If it is not implemented the user will receive an error.
+
+
 Provided Libraries
 -------------------
 
@@ -69,21 +81,6 @@ Faker
     Faker makes for each generation of fake data.  This is especially useful when you're dealing with an incomplete data model or one that has been anonymized.
 
 
-Hooks
-------
-
-A number of hooks are available.
-
-Dataset Directory Structure
---------------------------------
-
-The following skeleton directory structure is required::
-
-    /install.py
-    /tests
-    schema.cql
-
-
 Testing
 -------
 
@@ -94,16 +91,3 @@ CDM will include a tool for testing a project.  This runs all the projects unit 
     cdm test
 
 All tests must pass :code:`cdm test` for inclusion in the official Dataset repository.
-
-
-
-DSE Search
-----------
-
-An installer can provide search functionality.  A user may enable search with the :code:`--search` flag.
-
-DSE Graph
------------
-
-Graph support can be activated by the :bash:`--graph` command line switch.  If this switch is supplied, your Installer's :code:`install_graph()` method will be called.  If it is not implemented the user will receive an error.
-
