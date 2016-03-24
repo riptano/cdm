@@ -21,6 +21,26 @@ Create a new dataset with the :bash:`cdm new` command.  It will generate a proje
     cdm new example-name
 
 
+Installers are created by having a file called :code:`install.py` in the top level of your dataset.  The installer must subclass :code:`cdm.installer.Installer`.  The cdm utility will discover the Installer automatically so the name is somewhat arbitrary, however it should reflect the dataset's name as a convention.
+
+Configure your post_init
+--------------------------
+
+Set up your :code:`post_init()` hook.  You should load any data you'll need for all the various imports::
+
+    class MovieLensInstaller(Installer):
+        def post_init(self):
+            context = self.context
+            self.my_data = some_helper()
+
+
+
+Set up Cassandra Schema
+------------------------
+
+Read up on the different options for configuring your :doc:`/schema/cassandra`.
+
+
 Provided Libraries
 -------------------
 
@@ -60,10 +80,7 @@ CDM will include a tool for testing a project.  This runs all the projects unit 
 
 All tests must pass :code:`cdm test` for inclusion in the official Dataset repository.
 
-Installers
------------
 
-Installers are created by having a file called :code:`install.py` in the top level of your dataset.  The installer must subclass :code:`cdm.installer.Installer`.  The cdm utility will discover the Installer automatically so the name is somewhat arbitrary, however it should reflect the dataset's name as a convention.
 
 DSE Search
 ----------
