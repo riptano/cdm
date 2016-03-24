@@ -123,6 +123,12 @@ Faker
 Firehawk
     Firehawk is an experimental library that translates schema shorthand to DSE Graph groovy functions.
 
+Writing Tutorials
+-------------------
+
+Start up a notebook with :code:`jupyter notebook` in the :code:`tutorials` directory.  Create a new notebook with a clear title as to it's purpose.  There's not yet a strict convention for notebook names as each one will depend on the dataset.
+
+As a general rule, there should be separate notebooks for basic data modeling, each language you want to go over
 
 Testing
 -------
