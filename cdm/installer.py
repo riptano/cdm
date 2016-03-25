@@ -1,6 +1,7 @@
 import subprocess
 import logging
 import os
+from abc import ABCMeta, abstractmethod
 
 from cassandra.cqlengine.management import sync_table
 from cassandra.cqlengine.models import ModelMetaClass
@@ -9,11 +10,13 @@ logger = logging.getLogger(__name__)
 
 class SimpleCQLSchema(object):
     def cassandra_schema(self):
-        assert False
+        return open(self.schema, "r").read().split(";")
 
 
 
 class Installer(object):
+    __metaclass__ = ABCMeta
+
     context = None
 
     _search = False
@@ -68,23 +71,29 @@ class Installer(object):
                 statement = str(statement)
             self.context.session.execute_graph(statement)
 
+    @abstractmethod
     def cassandra_schema(self):
         raise NotImplementedError("Cassandra schema required.")
 
+    # @abstractmethod
     def graph_schema(self):
         raise NotImplementedError("Graph schema required.")
 
+    # @abstractmethod
     def search_schema(self):
         # should return a dictionary of table
         raise NotImplementedError("Search schema required.")
 
+    @abstractmethod
     def install_cassandra(self):
         raise NotImplementedError("Cassandra data required")
 
+    # @abstractmethod
     def install_search(self):
         logger.info("Search requested but not implemented")
         raise NotImplementedError()
 
+    # @abstractmethod
     def install_graph(self):
         logger.info("Graph requested but not implemented")
         raise NotImplementedError()
@@ -96,3 +105,5 @@ class Installer(object):
     @property
     def keyspace(self):
         return self.context.session.keyspace
+
+Installer.register(SimpleCQLSchema)
