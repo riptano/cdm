@@ -7,6 +7,10 @@ from cassandra.cqlengine.models import ModelMetaClass
 
 logger = logging.getLogger(__name__)
 
+class SimpleCQLSchema(object):
+    def cassandra_schema(self):
+        assert False
+
 
 
 class Installer(object):
