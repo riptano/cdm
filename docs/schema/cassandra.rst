@@ -8,9 +8,9 @@ Using a schema file
 
 This is useful if you have a schema somewhere already that you want to write to disk through cqlsh, and you don't wish to use CQLEngine models.
 
-To easily use a schema file, make sure your :doc:`installer` subclasses :code:`SimpleCQLSchema`::
+To easily use a schema file, make sure your :doc:`installer` subclasses :code:`SimpleCQLSchema` *first*::
 
-    class MyInstaller(Installer, SimpleCQLSchema):
+    class MyInstaller(SimpleCQLSchema, Installer):
         pass
 
 Put your schema in schema.cql, and it will automatically be picked up and loaded, splitting the statements on :code:`;`.
