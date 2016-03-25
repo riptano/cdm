@@ -7,6 +7,8 @@ from cassandra.cqlengine.models import ModelMetaClass
 
 logger = logging.getLogger(__name__)
 
+
+
 class Installer(object):
     context = None
 
@@ -36,6 +38,7 @@ class Installer(object):
         if self._search:
             self.install_search()
         if self._graph:
+            self.install_graph_schema()
             self.install_graph()
 
         # set up tutorials
@@ -53,6 +56,13 @@ class Installer(object):
             else:
                 self.context.session.execute(table)
 
+    def install_graph_schema(self):
+        from firehawk.ddl import ParsedCommand
+        for statement in self.graph_schema():
+            logging.info("Schema %s", statement)
+            if isinstance(statement, ParsedCommand):
+                statement = str(statement)
+            self.context.session.execute_graph(statement)
 
     def cassandra_schema(self):
         raise NotImplementedError("Cassandra schema required.")
