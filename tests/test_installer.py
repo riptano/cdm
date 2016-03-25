@@ -10,4 +10,4 @@ def sample():
 def test_simple_cql_schema():
     installer = get_installer("sample")
     schema = installer.cassandra_schema()
-    import ipdb; ipdb.set_trace()
+    assert len(schema) > 0

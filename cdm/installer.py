@@ -10,7 +10,8 @@ logger = logging.getLogger(__name__)
 
 class SimpleCQLSchema(object):
     def cassandra_schema(self):
-        return open(self.schema, "r").read().split(";")
+        data = open(self.schema, "r").read().split(";")
+        return filter(lambda y: len(y), map(lambda x: x.strip(), data))
 
 
 
@@ -100,7 +101,7 @@ class Installer(object):
 
     @property
     def schema(self):
-        return os.path.join(self.context.root, "/schema.cql")
+        return os.path.join(self.context.root, "schema.cql")
 
     @property
     def keyspace(self):
