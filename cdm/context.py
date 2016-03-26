@@ -87,6 +87,4 @@ class Context(object):
         logging.info(msg)
 
 
-    def install(self):
-        pass
 

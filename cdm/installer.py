@@ -77,6 +77,13 @@ class Installer(object):
 
 
     def install_search_schema(self):
+        tables = self.search_schema()
+        keyspace = self.keyspace
+        host = "localhost"
+        for table in tables:
+            if isinstance(table, AutoGenerateSolrResources):
+                tmp = "http://{}:8983/solr/admin/cores?action=CREATE&name={}.{}&generateResources=true".format(host, keyspace, table)
+
         pass
 
     @abstractmethod
