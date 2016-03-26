@@ -2,6 +2,7 @@ import subprocess
 import logging
 import os
 from abc import ABCMeta, abstractmethod
+from collections import namedtuple
 
 from cassandra.cqlengine.management import sync_table
 from cassandra.cqlengine.models import ModelMetaClass
@@ -13,7 +14,8 @@ class SimpleCQLSchema(object):
         data = open(self.schema, "r").read().split(";")
         return filter(lambda y: len(y), map(lambda x: x.strip(), data))
 
-
+AutoGenerateSolrResources = namedtuple("AutoGenerateSolrResources", ["table"])
+ExplicitSolrSchema = namedtuple("ExplicitSolrSchema", ["table"])
 
 class Installer(object):
     __metaclass__ = ABCMeta
@@ -40,11 +42,11 @@ class Installer(object):
         logger.info("post_init() complete")
 
         if self._cassandra_schema:
-            self.install_schema()
+            self.install_cassandra_schema()
         if self._cassandra:
             self.install_cassandra()
         if self._search:
-            self.install_search()
+            self.install_search_schema()
         if self._graph:
             self.install_graph_schema()
             self.install_graph()
@@ -53,7 +55,7 @@ class Installer(object):
 
         logger.info("Done with install.")
 
-    def install_schema(self):
+    def install_cassandera_schema(self):
         # do not override
         logger.info("Applying schema {}".format(self.schema))
 
@@ -64,6 +66,7 @@ class Installer(object):
             else:
                 self.context.session.execute(table)
 
+
     def install_graph_schema(self):
         from firehawk.ddl import ParsedCommand
         for statement in self.graph_schema():
@@ -71,6 +74,10 @@ class Installer(object):
             if isinstance(statement, ParsedCommand):
                 statement = str(statement)
             self.context.session.execute_graph(statement)
+
+
+    def install_search_schema(self):
+        pass
 
     @abstractmethod
     def cassandra_schema(self):
@@ -82,17 +89,13 @@ class Installer(object):
 
     # @abstractmethod
     def search_schema(self):
-        # should return a dictionary of table
+        # should return a list of SearchSchema classes
         raise NotImplementedError("Search schema required.")
 
     @abstractmethod
     def install_cassandra(self):
         raise NotImplementedError("Cassandra data required")
 
-    # @abstractmethod
-    def install_search(self):
-        logger.info("Search requested but not implemented")
-        raise NotImplementedError()
 
     # @abstractmethod
     def install_graph(self):
