@@ -3,7 +3,7 @@ import logging
 import os
 from abc import ABCMeta, abstractmethod
 from collections import namedtuple
-
+import requests
 from cassandra.cqlengine.management import sync_table
 from cassandra.cqlengine.models import ModelMetaClass
 
@@ -37,7 +37,6 @@ class Installer(object):
         logger.info("Post init, nothing to do.")
 
     def _install(self):
-        self.install_schema()
         self.post_init()
         logger.info("post_init() complete")
 
@@ -55,7 +54,7 @@ class Installer(object):
 
         logger.info("Done with install.")
 
-    def install_cassandera_schema(self):
+    def install_cassandra_schema(self):
         # do not override
         logger.info("Applying schema {}".format(self.schema))
 
@@ -77,14 +76,16 @@ class Installer(object):
 
 
     def install_search_schema(self):
+        logging.info("Setting up search schema")
         tables = self.search_schema()
         keyspace = self.keyspace
         host = "localhost"
         for table in tables:
             if isinstance(table, AutoGenerateSolrResources):
-                tmp = "http://{}:8983/solr/admin/cores?action=CREATE&name={}.{}&generateResources=true".format(host, keyspace, table)
+                url = "http://{}:8983/solr/admin/cores?action=CREATE&name={}.{}&generateResources=true&reindex=true".format(host, keyspace, table.table)
+                logging.info(url)
+                logging.info(requests.get(url))
 
-        pass
 
     @abstractmethod
     def cassandra_schema(self):
