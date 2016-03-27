@@ -74,9 +74,11 @@ def get_session(dataset, graph=False, host="localhost"):
     session = connect(host=host, keyspace=keyspace)
 
     print "Creating keyspace"
-    if keyspace not in session.cluster.metadata.keyspaces:
-        cql = "create KEYSPACE {} WITH replication = {{'class': 'SimpleStrategy', 'replication_factor': 1}}".format(keyspace)
-        session.execute(cql)
+    cql = "drop keyspace if exists {}".format(keyspace)
+    session.execute(cql)
+
+    cql = "create KEYSPACE {} WITH replication = {{'class': 'SimpleStrategy', 'replication_factor': 1}}".format(keyspace)
+    session.execute(cql)
 
     if graph:
         graph_keyspace = keyspace + "_graph"
