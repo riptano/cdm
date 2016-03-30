@@ -73,6 +73,9 @@ class Context(object):
         fp = open(cache, 'r')
         return fp
 
+    def open_local(self, name):
+        tmp = os.path.join(self.root, name)
+        return open(tmp, "r")
 
     def clean_cache(self):
         """
