@@ -19,7 +19,8 @@ setup(
             "cassandra-driver>=3.1.0a2", "docopt>=0.6.1",
             "gitpython", "PyYAML", "pandas>=0.17.1",
              "colorama", "firehawk>=0.3",
-            "fake-factory", "requests>=2.9.1"
+            "fake-factory", "requests>=2.9.1",
+            "jupyter"
         ]
 
 )
