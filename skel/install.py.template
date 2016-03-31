@@ -1,0 +1,11 @@
+from cdm.installer import Installer
+import pandas
+
+class $name(Installer):
+    def post_init(self):
+        # download your files here
+        pass
+
+    def install_cassandra(self):
+        # this is set up for you automatically
+        session = self.context.session

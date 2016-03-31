@@ -27,8 +27,11 @@ from subprocess import Popen
 sys.path.append("")
 import os
 import os.path
+import cdm
 from ConfigParser import SafeConfigParser
 import logging
+from string import Template
+
 
 # 3rd party
 
@@ -114,6 +117,24 @@ def main():
         else:
             os.execvp("jupyter-notebook", ['notebook'])
 
+    if arguments["new"]:
+        name = arguments["<dataset>"]
+        os.mkdir(name)
+        os.chdir(name)
+        os.mkdir("tutorials")
+
+        # set up the install template
+        tmp = os.path.dirname(cdm.__file__)
+        tmp = os.path.join(tmp, os.path.pardir)
+        root = os.path.abspath(tmp)
+        skel = os.path.join(root, "skel", "install.py.template")
+        skel = Template(open(skel).read())
+        result = skel.substitute(name=name)
+        
+        with open("install.py", 'w') as fp:
+            fp.write(result)
+
+        # create dir name
     print "Done"
 
 
