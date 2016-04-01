@@ -20,7 +20,7 @@ class Context(object):
 
     @property
     def installer(self):
-        post_install = os.path.join(self.root, "install.py.template")
+        post_install = os.path.join(self.root, "install.py")
 
         logging.info("Loading installer {}".format(post_install))
         module = imp.load_source("Installer", post_install)

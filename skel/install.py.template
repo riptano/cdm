@@ -1,5 +1,8 @@
-from cdm.installer import Installer
-import pandas
+from cdm.installer import Installer, SimpleCQLSchema
+from pandas import read_csv
+from zipfile import ZipFile
+from faker import Factory
+
 
 class $name(Installer):
     def post_init(self):

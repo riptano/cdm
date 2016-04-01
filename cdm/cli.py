@@ -119,22 +119,36 @@ def main():
 
     if arguments["new"]:
         name = arguments["<dataset>"]
+        installer_name = raw_input("Installer name? (ex: MyInstaller)> ")
+
+        generate_schema = raw_input("Do you wish to use a simple schema.cql (y/n, default y)> ")
+        generate_schema = True if generate_schema == 'y' else False
+
+        create_data_dir = raw_input("Will you include data with this dataset? (y/n, default y)> ")
+        create_data_dir = True if create_data_dir == 'y' else False
+
+
+        # if generate_schema == 'y':
+        logging.info("Creating %s directory", name)
         os.mkdir(name)
         os.chdir(name)
+        logging.info("Creating tutorials")
         os.mkdir("tutorials")
 
         # set up the install template
+        logging.info("Creating installer skeleton")
         tmp = os.path.dirname(cdm.__file__)
         tmp = os.path.join(tmp, os.path.pardir)
         root = os.path.abspath(tmp)
         skel = os.path.join(root, "skel", "install.py.template")
         skel = Template(open(skel).read())
-        result = skel.substitute(name=name)
-        
+        result = skel.substitute(name=installer_name)
+
+        logging.info("Writing installer file")
         with open("install.py", 'w') as fp:
             fp.write(result)
 
-        # create dir name
+
     print "Done"
 
 
