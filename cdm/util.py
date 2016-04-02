@@ -17,7 +17,7 @@ from cdm.context import Context
 from cdm.installer import Installer
 import sys
 from distutils.spawn import find_executable
-
+import yaml
 DATASETS_URL = "https://raw.githubusercontent.com/cassandra-data-manager/cdm/master/datasets.yaml"
 
 CDM_CACHE = os.getenv("CDM_CACHE", os.path.expanduser("~/.cdm/"))
@@ -209,4 +209,21 @@ def create_keyspace():
     # TODO ask for strategy and RF
     print "Creating keyspace (SimpleStrategy)"
     print "Replication factor 1"
+
+
+def prompt(p, default):
+    command = "{} [{}]>".format(p, default)
+    result = raw_input(command).strip()
+    return result if result else default
+
+
+def configure_config(fp):
+    cassandra_host = prompt("Cassandra host?", "localhost")
+    spark_host = prompt("Spark host?", "localhost")
+
+    # write config out
+    data = {"cassandra_host": cassandra_host,
+            "spark_host": spark_host }
+
+    fp.write(yaml.dump(data, default_flow_style=False))
 
