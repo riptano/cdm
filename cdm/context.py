@@ -133,3 +133,9 @@ class Context(object):
         return stmt
 
 
+    def prepare(self, table, fields):
+        field_list = ",".join(fields)
+        placeholders = ",".join(["?"] * len(fields))
+        statement = "INSERT INTO {} ({}) VALUES ({})".format(table, field_list, placeholders)
+        logging.info(statement)
+        return self.session.prepare(statement)

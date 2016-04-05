@@ -20,7 +20,7 @@ setup(
             "gitpython", "PyYAML", "pandas>=0.17.1",
              "colorama", "firehawk>=0.3",
             "fake-factory", "requests>=2.9.1",
-            "jupyter"
+            "jupyter", "gevent>=1.1.1", "progressbar2>=3.6.2"
         ]
 
 )
