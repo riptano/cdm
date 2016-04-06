@@ -14,7 +14,7 @@ def df():
     return DataFrame(data)
 
 @fixture
-def importer(df):
+def importer(df, session):
     return Importer(session, df)
 
 
@@ -41,3 +41,10 @@ def test_insert_statement(importer):
     assert stmt.startswith("INSERT INTO tab")
 
 
+def test_load(importer):
+    queries = ["DROP TABLE IF EXISTS test_importer",
+               "CREATE TABLE test_importer (name text primary key, hats int, nickname text)"]
+    for q in queries:
+        importer.session.execute(q)
+
+    importer.load("test_importer")

@@ -1,6 +1,6 @@
 import logging
-from collections import OrderedDict
 from gevent.pool import Pool
+from progressbar import ProgressBar
 
 class Importer(object):
     session = None
@@ -37,3 +37,32 @@ class Importer(object):
         placeholders = ",".join(["?"] * len(fields))
         statement = "INSERT INTO {} ({}) VALUES ({})".format(table, field_list, placeholders)
         return (statement, row_as_dict.values())
+
+
+
+    def load(self, table):
+        cache = {}
+
+        def save(row):
+            (query, values) = self.get_insert(row, table)
+            try:
+                prepared = cache[query]
+            except:
+                prepared = self.session.prepare(query)
+                cache[query] = prepared
+            bound = prepared.bind(values)
+            self.session.execute(bound)
+
+        pool = Pool(50)
+        i = 0
+        with ProgressBar(max_value=len(self.dataframe)) as p:
+            for _ in pool.imap_unordered(save, self.iter()):
+                i += 1
+                if i % 10 == 0:
+                    pool.update(i)
+
+
+
+
+
+
