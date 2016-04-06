@@ -47,3 +47,7 @@ def get_installer(name):
     installer = context.installer
     return installer
 
+
+@pytest.fixture(scope="session")
+def session():
+    return get_session("test")

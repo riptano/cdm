@@ -1,12 +1,16 @@
-import urllib2
-from base64 import b64encode
+from gevent.monkey import patch_all
+import logging
 import os.path
 import imp
 import inspect
-from cdm.installer import Installer
-import logging
-from cassandra.concurrent import execute_concurrent_with_args
+from base64 import b64encode
+import urllib2
+
+from gevent.pool import Pool
+import progressbar
+
 import pandas
+from cdm.installer import Installer
 
 class InstallerNotFound(Exception): pass
 
@@ -91,7 +95,8 @@ class Context(object):
     def feedback(self, msg):
         logging.info(msg)
 
-    def save_dataframe_to_cassandra(self, dataframe, table, types=None):
+    def save_dataframe_to_cassandra(self, dataframe, table, types=None,
+                                    transformation=None):
         """
         :param session:
         :type session: cassandra.cluster.Session
@@ -100,42 +105,31 @@ class Context(object):
         :param table:
         :return:
         """
+        logging.info("Saving dataframe to %s", table)
+        pool = Pool(50)
+        i = 0
 
+        prepared = {}
+        import ipdb; ipdb.set_trace()
 
-        statement = self._get_prepared_statement(dataframe, table)
+        def f(row):
+            logging.info(row)
+            if 'stmt' not in prepared:
+                prepared['stmt'] = self.prepare(table, row.columns)
 
-        prepared = self.session.prepare(statement)
+            logging.info(row)
+            self.session.execute(prepared['stmt'], row.values())
 
-        dataframe = dataframe.where(dataframe.notnull(), None)
-
-        def dgenerator():
-            for x in dataframe.itertuples(index=False):
-                yield x
-
-        execute_concurrent_with_args(self.session, prepared, dgenerator())
-
-    def _get_prepared_statement(self, dataframe, table):
-        """
-        :param session:
-        :param dataframe:
-        :type dataframe pandas.DataFrame
-        :param table:
-        :return:
-        """
-        keys = dataframe.keys()
-
-        str_keys = ", ".join(keys)
-
-        placeholders = ",".join(["?"] * len(keys))
-
-        stmt = "INSERT INTO %s (%s) VALUES (%s)" % (table, str_keys, placeholders)
-
-        return stmt
+        with progressbar.ProgressBar(max_value=len(dataframe)) as bar:
+            i += 1
+            for _ in pool.imap_unordered(f, dataframe.itertuples()):
+                if i % 10 == 0:
+                    bar.update(i)
 
 
     def prepare(self, table, fields):
         field_list = ",".join(fields)
         placeholders = ",".join(["?"] * len(fields))
         statement = "INSERT INTO {} ({}) VALUES ({})".format(table, field_list, placeholders)
-        logging.info(statement)
+        logging.info("preparing %s", statement)
         return self.session.prepare(statement)
