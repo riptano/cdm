@@ -53,8 +53,9 @@ class Importer(object):
             bound = prepared.bind(values)
             self.session.execute(bound)
 
-        pool = Pool(50)
+        pool = Pool(100)
         i = 0
+        print "Loading {}".format(table)
         with ProgressBar(max_value=len(self.dataframe)) as p:
             for _ in pool.imap_unordered(save, self.iter()):
                 i += 1

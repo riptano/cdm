@@ -43,12 +43,18 @@ os.environ['CQLENG_ALLOW_SCHEMA_MANAGEMENT'] = "1"
 
 # set up logging to console
 console = logging.StreamHandler()
-console.setLevel(logging.INFO)
+# console.setLevel(logging.INFO)
 # set a format which is simpler for console use
 # formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
 # console.setFormatter(formatter)
 # add the handler to the root logger
+logging_path = os.path.expanduser("~/cdm.log")
+fh = logging.FileHandler(logging_path)
+fh.setLevel(logging.INFO)
+
 root_logger = logging.getLogger('')
+root_logger.handlers = []
+root_logger.addHandler(fh)
 root_logger.setLevel(logging.INFO)
 
 
