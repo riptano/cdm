@@ -13,6 +13,9 @@ def df():
 
     return DataFrame(data)
 
+@fixture
+def importer(df):
+    return Importer(session, df)
 
 
 def test_simple_transform(session, df):
@@ -31,5 +34,10 @@ def test_custom_transform(session, df):
     assert isinstance(row, dict)
     assert row['name'] == "JON"
 
+
+def test_insert_statement(importer):
+    row = importer.iter().next()
+    stmt, values = importer.get_insert(row, "tab")
+    assert stmt.startswith("INSERT INTO tab")
 
 

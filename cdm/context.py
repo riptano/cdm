@@ -110,7 +110,6 @@ class Context(object):
         i = 0
 
         prepared = {}
-        import ipdb; ipdb.set_trace()
 
         def f(row):
             logging.info(row)
