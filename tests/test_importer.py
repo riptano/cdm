@@ -15,11 +15,21 @@ def df():
 
 
 
-def test_simle_transform(session, df):
+def test_simple_transform(session, df):
     i = Importer(session, df)
     row = i.iter().next()
     assert isinstance(row, dict)
     assert row['name'] == "Jon"
+
+def test_custom_transform(session, df):
+    def t(row):
+        row['name'] = row['name'].upper()
+        return dict(row)
+
+    i = Importer(session, df, transformation=t)
+    row = i.iter().next()
+    assert isinstance(row, dict)
+    assert row['name'] == "JON"
 
 
 
