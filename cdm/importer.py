@@ -59,7 +59,7 @@ class Importer(object):
             for _ in pool.imap_unordered(save, self.iter()):
                 i += 1
                 if i % 10 == 0:
-                    pool.update(i)
+                    p.update(i)
 
 
 

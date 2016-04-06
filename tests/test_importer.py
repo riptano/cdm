@@ -44,6 +44,7 @@ def test_insert_statement(importer):
 def test_load(importer):
     queries = ["DROP TABLE IF EXISTS test_importer",
                "CREATE TABLE test_importer (name text primary key, hats int, nickname text)"]
+
     for q in queries:
         importer.session.execute(q)
 

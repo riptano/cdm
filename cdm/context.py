@@ -11,6 +11,7 @@ import progressbar
 
 import pandas
 from cdm.installer import Installer
+from cdm.importer import Importer
 
 class InstallerNotFound(Exception): pass
 
@@ -95,7 +96,7 @@ class Context(object):
     def feedback(self, msg):
         logging.info(msg)
 
-    def save_dataframe_to_cassandra(self, dataframe, table, types=None,
+    def save_dataframe_to_cassandra(self, dataframe, table,
                                     transformation=None):
         """
         :param session:
@@ -106,24 +107,8 @@ class Context(object):
         :return:
         """
         logging.info("Saving dataframe to %s", table)
-        pool = Pool(50)
-        i = 0
-
-        prepared = {}
-
-        def f(row):
-            logging.info(row)
-            if 'stmt' not in prepared:
-                prepared['stmt'] = self.prepare(table, row.columns)
-
-            logging.info(row)
-            self.session.execute(prepared['stmt'], row.values())
-
-        with progressbar.ProgressBar(max_value=len(dataframe)) as bar:
-            i += 1
-            for _ in pool.imap_unordered(f, dataframe.itertuples()):
-                if i % 10 == 0:
-                    bar.update(i)
+        importer = Importer(self.session, dataframe, transformation)
+        importer.load(table)
 
 
     def prepare(self, table, fields):
