@@ -103,7 +103,7 @@ def main():
 
     if arguments["tutorials"]:
         # move into the tutorial directory
-
+        sys.argv["SPARK_DIRECTORY"] = ""
         if arguments["<dataset>"] == ".":
             os.chdir("tutorials")
         else:
