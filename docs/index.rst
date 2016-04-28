@@ -45,7 +45,7 @@ Developer Documentation
    :glob:
 
    datasets
-   schema/*
+   schema/cassandra
 
 
 Indices and tables
