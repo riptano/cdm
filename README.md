@@ -25,14 +25,3 @@ Options are all available at `cdm help`
 
 I encourage you to read through the [documentation](http://cdm.readthedocs.org/en/latest/).
     
-
-## Requesting a dataset
-
-Please submit a GitHub issue requesting the dataset, with as much detail as possible.  You should include the following:
-
-* Dataset URL
-* What you'd like to use the data for (so we can structure tables accordingly)
-
-
-
-
