@@ -6,7 +6,7 @@ This repository contains the cdm tool only, and has references to repositories w
 
 ## Installation
 
-`pip install cassandra-dataset-manager`
+    pip install cassandra-dataset-manager
     
 The project is still under heavy development, a lot is changing very quickly.
 
