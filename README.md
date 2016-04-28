@@ -7,10 +7,6 @@ This repository contains the cdm tool only.  Other repositories in this repo con
 ## Installation
 
 `pip install cassandra-dataset-manager`
-
-Clone the repo.  Using a visualenv:
-
-    python setup.py develop
     
 The project is still under heavy development, a lot is changing very quickly.
 
@@ -20,6 +16,10 @@ Let's install the movielens-small dataset.  It's a quick download at just a few 
 
     cdm update
     cdm install movielens-small
+    
+Open the Cassandra shell:
+       
+    cqlsh -k movielens_small 
     
 Options are all available at `cdm help`
 
