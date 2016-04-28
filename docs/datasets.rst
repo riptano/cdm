@@ -31,7 +31,6 @@ Set up your :code:`post_init()` hook.  You should download and load any data int
     class MovieLensInstaller(Installer):
         def post_init(self):
             context = self.context
-            self.my_data = some_helper()
 
 If you need to download any data (like a zip file of CSVs, etc), you can use :code:`context.download(url)` which will download and cache the file at the URL return a file pointer.  Caching is provided automatically.
 
@@ -44,6 +43,8 @@ If you download a zip file, the easiest way to access the data is using the buil
 You can use the file pointers returned from :code:`ZipFile.open(name)` as normal pointers.  If you're working with CSV data, it's recommended to use the Pandas library (provided by CDM)::
 
     movies = read_csv(fp, sep="|", header=None, index_col=0, names=["id", "name", "genre"]).fillna(0)
+
+If you'd like to include your data with your dataset (a good idea of the dataset is small), you
 
 You can see how it's pretty easy to use the :code:`Context` to download and cache external files, then process and prepare using Pandas.
 
@@ -68,44 +69,33 @@ To load data, you'll want to use the :code:`session` provided by the :code:`Cont
                 session.execute(prepared, row.key, row.value)
 
 
+.. DSE Search Schema (coming soon)
+    ---------------------------------
+    An installer can provide search functionality.  A user may enable search with the :code:`--search` flag.
+    *Note: This feature is still in early development.*
+    Providing a search schema will be managed through the :code:`Installer.search_schema()` method.  It's exact behavior is still undefined.
+    Since integrated search is provided automatically there is no hook to install search data.
 
-DSE Search Schema
-------------------
+.. DSE Graph Schema
+    -----------------
+    Graph support can be activated by the :bash:`--graph` command line switch.  If this switch is supplied, your Installer's :code:`install_graph()` method will be called.  If it is not implemented the user will receive an error.
+    *Note: This feature is still in early development.*
+    Providing a graph schema will be managed through the :code:`Installer.graph_schema()` method.  It's exact behavior is still undefined.
 
-An installer can provide search functionality.  A user may enable search with the :code:`--search` flag.
 
-*Note: This feature is still in early development.*
-
-Providing a search schema will be managed through the :code:`Installer.search_schema()` method.  It's exact behavior is still undefined.
-
-Since integrated search is provided automatically there is no hook to install search data.
-
-DSE Graph Schema
------------------
-
-Graph support can be activated by the :bash:`--graph` command line switch.  If this switch is supplied, your Installer's :code:`install_graph()` method will be called.  If it is not implemented the user will receive an error.
-
-*Note: This feature is still in early development.*
-
-Providing a graph schema will be managed through the :code:`Installer.graph_schema()` method.  It's exact behavior is still undefined.
-
-DSE Graph Data
----------------
-
-Let's look at an example::
-
-    class MyInstaller(Installer):
-        def install_graph(self):
-            # create movies
-            session = self.context.session
-            from dse.graph import SimpleGraphStatement
-
-            movie_stmt = SimpleGraphStatement("graph.addVertex(label, 'movie', 'name', name, 'id', movie_id)")
-
-            for movie in self.movies.itertuples():
-                params = {"name": movie.name,
-                          "movie_id": movie.Index}
-                session.execute_graph(movie_stmt, params)
+.. DSE Graph Data
+    ---------------
+    Let's look at an example::
+        class MyInstaller(Installer):
+            def install_graph(self):
+                # create movies
+                session = self.context.session
+                from dse.graph import SimpleGraphStatement
+                movie_stmt = SimpleGraphStatement("graph.addVertex(label, 'movie', 'name', name, 'id', movie_id)")
+                for movie in self.movies.itertuples():
+                    params = {"name": movie.name,
+                              "movie_id": movie.Index}
+                    session.execute_graph(movie_stmt, params)
 
 
 Provided Libraries
@@ -120,15 +110,8 @@ Pandas
 Faker
     Faker makes for each generation of fake data.  This is especially useful when you're dealing with an incomplete data model or one that has been anonymized.
 
-Firehawk
-    Firehawk is an experimental library that translates schema shorthand to DSE Graph groovy functions.
-
-Writing Tutorials
--------------------
-
-Start up a notebook with :code:`jupyter notebook` in the :code:`tutorials` directory.  Create a new notebook with a clear title as to it's purpose.  There's not yet a strict convention for notebook names as each one will depend on the dataset.
-
-As a general rule, there should be separate notebooks for basic data modeling, each language you want to go over
+.. Firehawk
+        Firehawk is an experimental library that translates schema shorthand to DSE Graph groovy functions.
 
 Testing
 -------

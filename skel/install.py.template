@@ -6,7 +6,7 @@ from faker import Factory
 
 class $name(Installer):
     def post_init(self):
-        # download your files here
+        # download your files here (optional)
         pass
 
     def install_cassandra(self):

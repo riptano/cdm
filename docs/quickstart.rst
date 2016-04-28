@@ -5,15 +5,19 @@ Make sure you have either open source Cassandra (2.1 or later) or DataStax Enter
 
 Getting up and running with CDM is simple.  In a virtualenv, run the following::
 
-    pip install -e git+https://github.com/cassandra-dataset-manager/cdm.git#egg=cdm
+    pip install cassandra-dataset-manager
 
 You'll have a command line utility, :code:`cdm`, installed in your virtualenv's bin directory.  Update your local dataset list, then install the movielens-small dataset::
 
     cdm update
     cdm install movielens-small
 
-You can now learn about this dataset by running::
+You now have the `movielens-small` dataset installed in your local cassandra cluster.
 
-    cdm tutorials movielens-small
+Next, type `cqlsh` to start working with the Cassandra shell.
 
-This will open a Jupyter notebook with various tutorials about the data model and code examples.  For more information, consult the :doc:`/usage` section of the documentation.
+Once cqlsh starts, type `use movielens_small` then `desc tables` to see all the tables in the schema.  Type the following to read some data:
+
+
+
+

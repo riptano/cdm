@@ -1,12 +1,10 @@
 """cdm - Cassandra Data Manager
 
 Usage:
-    cdm search [<term>]
     cdm list [<term>]
     cdm show <dataset>
     cdm install [--host=<host>] [--keyspace=<keyspace>] [--nocassandra] [--graph] [--search] [--noupdate] <dataset>
     cdm update
-    cdm tutorials <dataset>
     cdm new <dataset>
     cdm test
 
@@ -67,7 +65,7 @@ def main():
         pass
 
 
-    if arguments["search"] or arguments["list"]:
+    if arguments["list"]:
         return list_datasets(arguments["<term>"])
 
     if arguments["update"]:
@@ -100,41 +98,32 @@ def main():
 
     if arguments["show"]:
         return show_dataset_details(arguments["<dataset>"])
-
-    if arguments["tutorials"]:
-        # move into the tutorial directory
-        sys.argv["SPARK_DIRECTORY"] = ""
-        if arguments["<dataset>"] == ".":
-            os.chdir("tutorials")
-        else:
-            dest = os.path.join(CDM_CACHE,
-                                "tutorials",
-                                arguments["<dataset>"])
-            os.chdir(dest)
-
-        if sys.platform.startswith('win'):
-            p = Popen(["jupyter-notebook"], shell=True)
-            # Don't raise KeyboardInterrupt in the parent process.
-            # Set this after spawning, to avoid subprocess inheriting handler.
-            import signal
-            signal.signal(signal.SIGINT, signal.SIG_IGN)
-            p.wait()
-            sys.exit(p.returncode)
-        else:
-            os.execvp("jupyter-notebook", ['notebook'])
+    #
+    # if arguments["tutorials"]:
+    #     # move into the tutorial directory
+    #     # sys.argv["SPARK_DIRECTORY"] = ""
+    #     if arguments["<dataset>"] == ".":
+    #         os.chdir("tutorials")
+    #     else:
+    #         dest = os.path.join(CDM_CACHE,
+    #                             "tutorials",
+    #                             arguments["<dataset>"])
+    #         os.chdir(dest)
+    #
+    #     if sys.platform.startswith('win'):
+    #         p = Popen(["jupyter-notebook"], shell=True)
+    #         # Don't raise KeyboardInterrupt in the parent process.
+    #         # Set this after spawning, to avoid subprocess inheriting handler.
+    #         import signal
+    #         signal.signal(signal.SIGINT, signal.SIG_IGN)
+    #         p.wait()
+    #         sys.exit(p.returncode)
+    #     else:
+    #         os.execvp("jupyter-notebook", ['notebook'])
 
     if arguments["new"]:
         name = arguments["<dataset>"]
-        installer_name = raw_input("Installer name? (ex: MyInstaller)> ")
 
-        generate_schema = raw_input("Do you wish to use a simple schema.cql (y/n, default y)> ")
-        generate_schema = True if generate_schema == 'y' else False
-
-        create_data_dir = raw_input("Will you include data with this dataset? (y/n, default y)> ")
-        create_data_dir = True if create_data_dir == 'y' else False
-
-
-        # if generate_schema == 'y':
         logging.info("Creating %s directory", name)
         os.mkdir(name)
         os.chdir(name)
@@ -148,7 +137,7 @@ def main():
         root = os.path.abspath(tmp)
         skel = os.path.join(root, "skel", "install.py.template")
         skel = Template(open(skel).read())
-        result = skel.substitute(name=installer_name)
+        result = skel.substitute(name="MyInstaller")
 
         logging.info("Writing installer file")
         with open("install.py", 'w') as fp:
