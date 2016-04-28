@@ -43,6 +43,10 @@ def list_datasets(search):
 
 
 def open_datasets():
+    if not os.path.exists(CDM_PACKAGE_FILE):
+        print "Datasets not found, auto fetching"
+        update_datasets()
+
     with open(CDM_PACKAGE_FILE, 'r') as fp:
         data = yaml.load(fp)
     return data
