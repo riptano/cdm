@@ -135,26 +135,6 @@ def install(dataset,
         cache_dir = CDM_CACHE + dataset + "_cache"
         sys.path.append(path) # so imports work
 
-        tutorials_root_dir = os.path.join(CDM_CACHE, "tutorials")
-
-        if not os.path.exists(tutorials_root_dir):
-            logger.info("Creating tutorials directory")
-            os.mkdir(tutorials_root_dir)
-
-        logger.info("Setting up tutorials")
-        dest = os.path.join(tutorials_root_dir, dataset)
-
-        if os.path.exists(dest):
-            logger.info("Clearing out old tutorial directory")
-            rmtree(dest)
-
-        copytree(os.path.join(path, "tutorials"), dest)
-
-    # install requirements.  need to come back to this.
-    # req_file = os.path.join(path, "requirements.txt")
-    # if os.path.exists(req_file):
-    #     print "Installing requirements"
-    #     subprocess.check_call(["pip", "install", "-r", req_file])
 
     print "Connecting"
 
