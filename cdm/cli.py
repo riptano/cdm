@@ -3,10 +3,9 @@
 Usage:
     cdm list [<term>]
     cdm show <dataset>
-    cdm install [--host=<host>] [--keyspace=<keyspace>] [--nocassandra] [--graph] [--search] [--noupdate] <dataset>
+    cdm install [--host=<host>] [--keyspace=<keyspace>] <dataset>
     cdm update
     cdm new <dataset>
-    cdm test
 
 Options:
     --debug
@@ -89,9 +88,9 @@ def main():
 
         host = arguments.get("--host") or default_host
         return install(tmp[0], tmp[1],
-                       install_cassandra=not arguments['--nocassandra'],
-                       install_graph=arguments['--graph'],
-                       install_search=arguments['--search'],
+                       install_cassandra=True,# not arguments['--nocassandra'],
+                       install_graph=False, # arguments['--graph'],
+                       install_search=False, #arguments['--search'],
                        host=host)
 
 

@@ -15,7 +15,7 @@ Installation of Datasets
     It should take 15 minutes or less for a user to go from "I want to learn" to "I'm looking at data".  The experience of loading sample data should be as simple as possible, with helpful error messages when things do go wrong or a requirement it not installed.
 
 Visual Learning via Examples
-    Jupyter notebooks provide an elegant means of teaching database and data model concepts by interweaving explanatory text and executable code.  The CDM framework will provide convenient means of displaying information from Cassandra and DSE Search.
+    Several tools, such as Jupyter and Zeppelin notebooks, provide an elegant means of teaching database and data model concepts by interweaving explanatory text and executable code.  By providing stable datasets through CDM people can create tutorials, blog posts, videos, and code examples without having to worry about creating new data models every time.
 
 
 Things this is not
