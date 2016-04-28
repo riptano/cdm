@@ -3,7 +3,7 @@ from setuptools import find_packages
 
 setup(
         name='cassandra-dataset-manager',
-        version='0.1',
+        version='0.2',
         packages=find_packages(),
         url='https://github.com/riptano/cdm',
         license='License :: OSI Approved :: Apache License',
