@@ -4,4 +4,3 @@ import os
 import os.path
 
 
-from cdm.notebook import load_ipython_extension
