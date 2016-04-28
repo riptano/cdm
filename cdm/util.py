@@ -18,7 +18,7 @@ from cdm.installer import Installer
 import sys
 from distutils.spawn import find_executable
 import yaml
-DATASETS_URL = "https://raw.githubusercontent.com/cassandra-data-manager/cdm/master/datasets.yaml"
+DATASETS_URL = "https://raw.githubusercontent.com/riptano/cdm/master/datasets.yaml"
 
 CDM_CACHE = os.getenv("CDM_CACHE", os.path.expanduser("~/.cdm/"))
 CDM_PACKAGE_FILE = CDM_CACHE + "datasets.yaml"
