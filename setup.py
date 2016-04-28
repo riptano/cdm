@@ -4,7 +4,7 @@ from setuptools import find_packages
 setup(
         name='Cassandra Dataset Manager',
         version='0.1',
-        packages=['cdm'],
+        packages=find_packages(),
         url='https://github.com/riptano/cdm',
         license='License :: OSI Approved :: Apache License',
         author='Jon Haddad',
@@ -18,9 +18,9 @@ setup(
         install_requires=[
             "cassandra-driver>=3.1.0a2", "docopt>=0.6.1",
             "gitpython", "PyYAML", "pandas>=0.17.1",
-             "colorama", "firehawk>=0.3",
+            "colorama", "firehawk>=0.3",
             "fake-factory", "requests>=2.9.1",
-            "jupyter", "gevent>=1.1.1", "progressbar2>=3.6.2"
+            "gevent>=1.1.1", "progressbar2>=3.6.2"
         ]
 
 )
