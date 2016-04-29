@@ -1,6 +1,3 @@
-demo:
-  url: https://github.com/cassandra-data-manager/demo.git
-  description: Demo dataset.  Useful for learning CDM, not much else.
 
 movielens-small:
   url: https://github.com/rustyrazorblade/movielens-small.git
